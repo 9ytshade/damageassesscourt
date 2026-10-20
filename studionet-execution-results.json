@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-10-20T21:34:07.435Z",
+  "contract": "0x1e4d9Ef20330636F289Aa550C2ED07030e5b93Fb",
+  "network": "GenLayer Studionet (Chain 61999)",
+  "underwriter": "0xB704b624ae5f776b3a3fA7496aDcdA4dB4DCAB56",
+  "claimant": "0x42960E62f1a41c61426F133c5e5412dd732F9303",
+  "cases": [
+    {
+      "caseName": "Case A: Policy Creation, Claim Filing & Fast-Path Full Settlement",
+      "policyId": 1,
+      "claimId": 1,
+      "transactions": {
+        "createPolicyPool": "0x58e0db67886fc9b7ace79554cff14b4f49a783fbe8df3da1a12735c2259bbd38",
+        "fileClaim": "0x40474999b0af237550053d073abbdf708f3f6949c9539d1ea6ff55d38730df10",
+        "approveClaim": "0x43160ec1fa0b0a2f436cfe9d22812bb7afad984764f9133e6b20a3d4fbf7573d"
+      },
+      "finalStatus": "approved",
+      "verifiedFastPathSettlement": true
+    },
+    {
+      "caseName": "Case B: Contestation, Defense Handshake & Equivalence Principle AI Adjudication",
+      "policyId": 1,
+      "claimId": 2,
+      "transactions": {
+        "fileClaim": "0xe98b6f3963d81d388c6daabd9962ec70bbe50bf70757c842cfd9d227e3afc805",
+        "contestClaim": "0xf56e8f3fc20bbf53751f77f1b8a07916b332e1ecc01e562ec9429afdef469570",
+        "submitDefense": "0x95170ac38920034697637d592b3fe46a776d81c0155694df04d3343402a66cae",
+        "adjudicateClaim": "0x588c68aa3941bf7aac80ac1c28e3790c8dfe9ca67a27103c94e547af5b740cc8"
+      },
+      "finalStatus": "rejected_slashed",
+      "verdict": {
+        "verdictId": 1,
+        "canonicalVerdict": "FRAUD_SLASHED",
+        "settlementBps": 0,
+        "rulingSummary": "Claim evidence link returned HTTP 404/410 (Dead or Fabricated Resource)"
+      }
+    }
+  ],
+  "finalTotals": {
+    "policyPools": 1,
+    "claims": 2,
+    "verdicts": 1
+  }
+}

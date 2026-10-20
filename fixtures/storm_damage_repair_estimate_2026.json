@@ -1,0 +1,54 @@
+{
+  "contractor_invoice_id": "EST-2026-90412",
+  "contractor": {
+    "company_name": "Apex Structural Roofing & Restoration LLC",
+    "license_number": "FL-CCC1334892",
+    "bonded": true,
+    "inspector_name": "Marcus Vance, Certified Loss Estimator",
+    "contact": "claims@apexrestoration.example.com"
+  },
+  "claimant_property": {
+    "address": "402 Oceanview Boulevard, Suite 100",
+    "structure_type": "Commercial Two-Story Masonry / Shingle Roof",
+    "property_owner": "Harborfront Logistics Corp"
+  },
+  "damage_summary": "Extensive structural decking displacement and water penetration following severe windstorm event. 420 sq ft of asphalt shingles sheared off south-facing elevation with flashing failure along west valley.",
+  "itemized_loss_schedule": [
+    {
+      "item_id": 1,
+      "category": "Structural Shingle & Decking Replacement",
+      "material_cost_gen": 0.008,
+      "labor_cost_gen": 0.006,
+      "covered_peril": "Direct Windstorm Damage",
+      "pre_existing_wear": false
+    },
+    {
+      "item_id": 2,
+      "category": "Perimeter Drip Edge & Valley Flashing Replacement",
+      "material_cost_gen": 0.003,
+      "labor_cost_gen": 0.002,
+      "covered_peril": "Direct Windstorm Damage",
+      "pre_existing_wear": false
+    },
+    {
+      "item_id": 3,
+      "category": "Interior Ceiling Drywall & Insulation Remediation",
+      "material_cost_gen": 0.002,
+      "labor_cost_gen": 0.003,
+      "covered_peril": "Consequential Water Infiltration",
+      "pre_existing_wear": false
+    },
+    {
+      "item_id": 4,
+      "category": "North Facade Gutter Rust Repair",
+      "material_cost_gen": 0.001,
+      "labor_cost_gen": 0.001,
+      "covered_peril": "Excluded Peril: Pre-Existing Corrosion / Wear",
+      "pre_existing_wear": true
+    }
+  ],
+  "total_net_estimate_gen": 0.026,
+  "recommended_storm_indemnity_gen": 0.024,
+  "excluded_maintenance_deduction_gen": 0.002,
+  "date_of_inspection": "2026-10-18T14:30:00Z"
+}

@@ -1,0 +1,17 @@
+{
+  "station_id": "NOAA-NWS-FL-KMIA-2026",
+  "reporting_agency": "National Oceanic and Atmospheric Administration (NOAA)",
+  "incident_event_name": "Severe Tropical Convective Windstorm Event (Gale Warning 26-10)",
+  "geographical_zone": "Coastal District Sector 7 (Miami-Dade / Broward Coastal)",
+  "event_timestamp_utc": "2026-10-17T22:15:00Z",
+  "meteorological_metrics": {
+    "peak_wind_gust_mph": 81.4,
+    "sustained_wind_speed_mph": 58.2,
+    "barometric_pressure_hpa": 986.3,
+    "accumulated_precipitation_inches": 4.12,
+    "convective_hail_detected": true,
+    "max_hail_diameter_inches": 0.75
+  },
+  "storm_severity_classification": "Category 1 Sustained Wind Velocity / Severe Storm Warning",
+  "official_advisory": "Widespread structural roof shearing, downed utility poles, and sudden water penetration reported throughout coastal corridors. Meets standard policy threshold for windstorm peril qualification."
+}

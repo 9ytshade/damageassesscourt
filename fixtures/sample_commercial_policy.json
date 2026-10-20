@@ -1,0 +1,25 @@
+{
+  "policy_reference": "POL-COMM-2026-8809",
+  "underwriter_identity": "Pacific & Atlantic Commercial Property Syndicate",
+  "policyholder_name": "Harborfront Logistics Corp",
+  "coverage_type": "Commercial Property Structural Special Form",
+  "effective_period": {
+    "start": "2026-01-01T00:00:00Z",
+    "expiry": "2026-12-31T23:59:59Z"
+  },
+  "covered_perils": [
+    "Peril 01: Windstorm and hurricane gusts exceeding 55 mph",
+    "Peril 02: Sudden and accidental water intrusion directly resulting from roof envelope puncture",
+    "Peril 03: Hail impact damage causing structural shingle fractures"
+  ],
+  "exclusion_clauses": [
+    "Exclusion A: Pre-existing wear-and-tear, metal corrosion, rust, or deferred maintenance",
+    "Exclusion B: Mold or fungal remediation exceeding 14 calendar days post-event",
+    "Exclusion C: Cosmetic or non-structural paint fading without compromised moisture barrier"
+  ],
+  "valuation_and_indemnity_terms": {
+    "settlement_standard": "Replacement Cost Value (RCV) less applicable exclusions",
+    "depreciation_schedule": "Exclusion of identified pre-existing deterioration schedules",
+    "basis_points_resolution": "Adjudicated proportionally based on verified qualifying loss proportion"
+  }
+}

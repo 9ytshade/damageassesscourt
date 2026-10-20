@@ -1,14 +1,43 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useWallet } from "@/lib/use-wallet";
-import { STUDIONET_CHAIN_ID, STUDIONET_RPC } from "@/lib/genlayer";
-import { WalletIcon, ExternalLinkIcon, CheckCircleIcon, XCircleIcon } from "@/components/icons";
+import { STUDIONET_CHAIN_ID } from "@/lib/genlayer";
+import { WalletIcon, ExternalLinkIcon, CheckCircleIcon } from "@/components/icons";
 
-export function WalletConnectModal({ onClose }: { onClose: () => void }) {
-  const { account, balance, isConnected, isConnecting, wrongNetwork, connect, disconnect, switchNetwork, formatAddress } =
-    useWallet();
+export function WalletConnect() {
+  const {
+    account,
+    balance,
+    isConnected,
+    isConnecting,
+    isRefreshing,
+    wrongNetwork,
+    connect,
+    disconnect,
+    switchAccount,
+    switchNetwork,
+    formatAddress,
+  } = useWallet();
+
+  const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const handleCopy = () => {
     if (!account) return;
@@ -17,124 +46,129 @@ export function WalletConnectModal({ onClose }: { onClose: () => void }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleConnect = async () => {
-    const ok = await connect();
-    if (ok) onClose();
+  const handleSwitchAccount = async () => {
+    await switchAccount();
+    setIsOpen(false);
   };
 
+  const handleDisconnect = async () => {
+    await disconnect();
+    setIsOpen(false);
+  };
+
+  if (isRefreshing) {
+    return (
+      <div className="inline-flex items-center gap-2 rounded-full border border-[#23252a] bg-[#0c0d0e] px-4 py-2 text-xs font-mono text-[#ffb829]">
+        <span className="h-2 w-2 rounded-full bg-[#ffb829] animate-ping" />
+        <span>REFRESHING...</span>
+      </div>
+    );
+  }
+
+  if (wrongNetwork) {
+    return (
+      <button
+        onClick={switchNetwork}
+        className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition-all shadow-sm shadow-rose-500/20"
+      >
+        <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+        <span>SWITCH TO STUDIONET</span>
+      </button>
+    );
+  }
+
+  if (!isConnected) {
+    return (
+      <button
+        onClick={connect}
+        disabled={isConnecting}
+        className="btn-pill-gold text-xs"
+      >
+        <WalletIcon className="h-4 w-4" />
+        <span>{isConnecting ? "CONNECTING..." : "CONNECT WALLET"}</span>
+      </button>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-2xl relative">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-slate-400 hover:text-white text-lg font-bold"
-        >
-          &times;
-        </button>
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      {/* Pill Trigger */}
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="inline-flex items-center gap-2.5 rounded-full border border-[#23252a] bg-[#0c0d0e] px-3.5 py-1.5 text-xs font-mono text-[#d0d6e0] hover:border-[#383b3f] hover:bg-[#141518] transition-all shadow-sm"
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+      >
+        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
+        <span className="font-semibold text-white tracking-tight">{formatAddress(account)}</span>
+        <span className="h-3 w-px bg-[#23252a]" />
+        <span className="text-[#8a8f98]">{balance ? `${balance} GEN` : "0 GEN"}</span>
+        <span className="text-[10px] text-[#8a8f98] ml-0.5" aria-hidden="true">
+          ⌄
+        </span>
+      </button>
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <WalletIcon className="h-5 w-5" />
+      {/* Popover Card */}
+      {isOpen && (
+        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-[#23252a] bg-[#0c0d0e] p-4 shadow-2xl z-50 animate-fade-in text-left">
+          {/* Header Row */}
+          <div className="flex items-center justify-between border-b border-[#23252a] pb-2.5 mb-3 text-[10px] font-mono tracking-wider">
+            <span className="text-[#8a8f98] uppercase">CONNECTED ACCOUNT</span>
+            <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              Studionet
+            </span>
           </div>
-          <div>
-            <h3 className="text-base font-semibold text-white">Wallet Connection</h3>
-            <p className="text-xs text-slate-400">Connect to GenLayer Studionet</p>
+
+          {/* Full Address Monospace Container */}
+          <div className="rounded-lg bg-[#141518] p-2.5 border border-[#23252a] text-xs font-mono text-[#d0d6e0] break-all select-all">
+            {account}
           </div>
-        </div>
 
-        {wrongNetwork && (
-          <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3.5 text-xs text-rose-300 flex items-start gap-3">
-            <XCircleIcon className="h-5 w-5 shrink-0 text-rose-400 mt-0.5" />
-            <div>
-              <p className="font-semibold">Incorrect Network Detected</p>
-              <p className="mt-1 text-slate-300">
-                DamageAssessCourt operates on GenLayer Studionet (Chain ID {STUDIONET_CHAIN_ID}).
-              </p>
-              <button
-                onClick={switchNetwork}
-                className="mt-2.5 rounded bg-rose-500/20 px-3 py-1 font-semibold text-rose-200 border border-rose-500/40 hover:bg-rose-500/30 transition-colors"
-              >
-                Switch to Studionet
-              </button>
-            </div>
+          {/* Balance Row */}
+          <div className="mt-3 flex items-center justify-between text-xs px-1">
+            <span className="text-[#8a8f98]">Balance</span>
+            <span className="font-mono font-bold text-white">
+              {balance ? `${balance} GEN` : "0 GEN"}
+            </span>
           </div>
-        )}
 
-        {isConnected ? (
-          <div className="space-y-4">
-            <div className="rounded-lg bg-slate-950/70 p-4 border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Connected Account</span>
-                <button
-                  onClick={handleCopy}
-                  className="text-amber-400 hover:text-amber-300 text-[11px] font-medium"
-                >
-                  {copied ? "Copied!" : "Copy Address"}
-                </button>
-              </div>
-              <p className="text-sm font-mono font-medium text-slate-200 break-all">{account}</p>
-              <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Balance:</span>
-                <span className="font-semibold text-white">{balance ? `${balance} GEN` : "Loading..."}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-              <span>Network</span>
-              <span className="text-slate-200 font-mono">
-                {wrongNetwork ? "Wrong Chain" : `Studionet (${STUDIONET_CHAIN_ID})`}
-              </span>
-            </div>
-
-            <div className="pt-2 flex gap-3">
-              <button
-                onClick={disconnect}
-                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
-              >
-                Disconnect
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-2 text-xs font-semibold text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-xs text-slate-300">
-              Connect your MetaMask or Ethereum browser wallet to file damage claims, underwrite risk pools, or
-              participate in AI court dispute adjudications.
-            </p>
-
+          {/* Action List */}
+          <div className="mt-4 space-y-1.5 pt-3 border-t border-[#23252a]">
+            {/* Copy Address */}
             <button
-              onClick={handleConnect}
-              disabled={isConnecting}
-              className="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-2.5 text-xs font-semibold text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-all shadow-md shadow-amber-500/20 disabled:opacity-50"
+              onClick={handleCopy}
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-[#d0d6e0] hover:bg-[#141518] hover:text-white transition-colors"
             >
-              <WalletIcon className="h-4 w-4" />
-              {isConnecting ? "Connecting to Wallet..." : "Connect Browser Wallet"}
+              <span>{copied ? "Address Copied!" : "Copy Address"}</span>
+              <span className="text-[10px] text-[#8a8f98] font-mono">
+                {copied ? "✓" : "CLIPBOARD"}
+              </span>
             </button>
 
-            <div className="rounded-lg bg-slate-950/50 p-3 border border-slate-800/80 text-[11px] text-slate-400 space-y-1.5">
-              <p className="font-semibold text-slate-300">Network Details:</p>
-              <p>RPC Endpoint: <span className="font-mono text-slate-300">{STUDIONET_RPC}</span></p>
-              <p>Chain ID: <span className="font-mono text-slate-300">{STUDIONET_CHAIN_ID}</span></p>
-              <div className="pt-1">
-                <a
-                  href="https://studio.genlayer.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-amber-400 hover:underline"
-                >
-                  GenLayer Studio Faucet <ExternalLinkIcon className="h-3 w-3" />
-                </a>
-              </div>
-            </div>
+            {/* Switch Account */}
+            <button
+              onClick={handleSwitchAccount}
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-[#d0d6e0] hover:bg-[#141518] hover:text-[#ffb829] transition-colors"
+            >
+              <span>Switch / Change Account</span>
+              <span className="text-[10px] text-[#8a8f98] font-mono">PICKER ↗</span>
+            </button>
+
+            {/* Disconnect Wallet */}
+            <button
+              onClick={handleDisconnect}
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
+            >
+              <span>Disconnect Wallet</span>
+              <span className="text-[10px] text-rose-400 font-mono">LOGOUT</span>
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
+
+// Keep export for backwards compatibility
+export { WalletConnect as WalletConnectModal };

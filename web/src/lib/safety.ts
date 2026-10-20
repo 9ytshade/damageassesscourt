@@ -68,6 +68,36 @@ export function sanitizePromptText(text: string): string {
     .replace(/'/g, "&#39;");
 }
 
+export function parseGenToWei(genStr: string | number): bigint {
+  if (!genStr) return 0n;
+  try {
+    const val = typeof genStr === "number" ? genStr.toString() : genStr.trim();
+    if (!val || isNaN(Number(val))) return 0n;
+    const parts = val.split(".");
+    const whole = parts[0] || "0";
+    const fraction = (parts[1] || "").slice(0, 18).padEnd(18, "0");
+    return BigInt(whole) * 10n ** 18n + BigInt(fraction);
+  } catch {
+    return 0n;
+  }
+}
+
+export function formatWei(wei: bigint | string | number | undefined | null, decimals: number = 4): string {
+  if (wei === undefined || wei === null) return "0.00";
+  try {
+    const b = BigInt(wei.toString());
+    const ether = Number(b) / 1e18;
+    if (ether === 0) return "0";
+    if (ether < 0.0001) return "<0.0001";
+    return ether.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: decimals,
+    });
+  } catch {
+    return "0.00";
+  }
+}
+
 export function calculateBpsSettlement(
   claimedAmountInput: bigint | string | number,
   settlementBpsInput: number,
@@ -94,10 +124,14 @@ export function calculateBpsSettlement(
       claimantTotalPayout: 0n,
       underwriterRefund: underwriterDeposit,
       poolRemainingDelta: claimedAmount + claimantStake,
+      grossPayout: "0.00",
+      claimantRefundedStake: "0.00",
+      netClaimantReceived: "0.00",
     };
   }
 
   if (clampedBps === 10_000) {
+    const totalPayout = claimedAmount + claimantStake + underwriterDeposit;
     return {
       claimedAmount,
       settlementBps: 10_000,
@@ -105,13 +139,17 @@ export function calculateBpsSettlement(
       insurerRetained: 0n,
       claimantStake,
       underwriterDeposit,
-      claimantTotalPayout: claimedAmount + claimantStake + underwriterDeposit,
+      claimantTotalPayout: totalPayout,
       underwriterRefund: 0n,
       poolRemainingDelta: 0n,
+      grossPayout: formatWei(claimedAmount),
+      claimantRefundedStake: formatWei(claimantStake),
+      netClaimantReceived: formatWei(totalPayout),
     };
   }
 
   // Partial settlement (1 to 9999 BPS) or Legitimate Exclusion (0 BPS honest denial)
+  const totalPayout = indemnityShare + claimantStake;
   return {
     claimedAmount,
     settlementBps: clampedBps,
@@ -119,9 +157,12 @@ export function calculateBpsSettlement(
     insurerRetained,
     claimantStake,
     underwriterDeposit,
-    claimantTotalPayout: indemnityShare + claimantStake,
+    claimantTotalPayout: totalPayout,
     underwriterRefund: underwriterDeposit,
     poolRemainingDelta: insurerRetained,
+    grossPayout: formatWei(indemnityShare),
+    claimantRefundedStake: formatWei(claimantStake),
+    netClaimantReceived: formatWei(totalPayout),
   };
 }
 
@@ -134,7 +175,6 @@ export function formatWeiAmount(wei: bigint | string | number | undefined | null
     if (ether >= 1) {
       return `${ether.toLocaleString("en-US", { maximumFractionDigits: 4 })} ETH`;
     }
-    // Small values or integer units
     const num = Number(b);
     if (num < 1000000000) {
       return `${num.toLocaleString("en-US")} ETH`;
@@ -142,22 +182,6 @@ export function formatWeiAmount(wei: bigint | string | number | undefined | null
     return `${ether.toLocaleString("en-US", { maximumFractionDigits: 4 })} ETH`;
   } catch {
     return "0 ETH";
-  }
-}
-
-export function formatWei(wei: bigint | string | number | undefined | null, decimals: number = 4): string {
-  if (wei === undefined || wei === null) return "0.00";
-  try {
-    const b = BigInt(wei.toString());
-    const ether = Number(b) / 1e18;
-    if (ether === 0) return "0";
-    if (ether < 0.0001) return "<0.0001";
-    return ether.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: decimals,
-    });
-  } catch {
-    return "0.00";
   }
 }
 

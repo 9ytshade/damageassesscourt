@@ -29,9 +29,11 @@ export interface WalletContextValue {
   rawWei: string;
   isConnected: boolean;
   isConnecting: boolean;
+  isRefreshing: boolean;
   wrongNetwork: boolean;
   connect: () => Promise<boolean>;
   disconnect: () => Promise<void>;
+  switchAccount: () => Promise<boolean>;
   switchNetwork: () => Promise<void>;
   refreshAccount: () => Promise<string>;
   getSignerClient: () => ReturnType<typeof createClient> | null;
@@ -47,9 +49,11 @@ const defaultWalletState: WalletContextValue = {
   rawWei: "",
   isConnected: false,
   isConnecting: false,
+  isRefreshing: false,
   wrongNetwork: false,
   connect: async () => false,
   disconnect: async () => {},
+  switchAccount: async () => false,
   switchNetwork: async () => {},
   refreshAccount: async () => "",
   getSignerClient: () => null,
@@ -64,6 +68,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [balance, setBalance] = useState<string>("");
   const [rawWei, setRawWei] = useState<string>("");
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [wrongNetwork, setWrongNetwork] = useState(false);
 
   const checkNetworkAndBalance = useCallback(async (addr: string) => {
@@ -140,6 +145,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     setIsConnecting(true);
     try {
       window.sessionStorage.removeItem(DISCONNECT_KEY);
+      window.localStorage.removeItem(DISCONNECT_KEY);
       const accounts = (await window.ethereum.request({
         method: "eth_requestAccounts",
       })) as string[];
@@ -161,12 +167,81 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   }, [checkNetworkAndBalance]);
 
   const disconnect = useCallback(async () => {
-    window.sessionStorage.setItem(DISCONNECT_KEY, "true");
-    setAccount("");
-    setBalance("");
-    setRawWei("");
-    setWrongNetwork(false);
+    setIsRefreshing(true);
+    try {
+      window.sessionStorage.setItem(DISCONNECT_KEY, "true");
+      window.localStorage.setItem(DISCONNECT_KEY, "true");
+
+      if (window.ethereum) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_revokePermissions",
+            params: [{ eth_accounts: {} }],
+          });
+        } catch (revokeErr) {
+          // Non-critical if wallet doesn't support revocation
+          if (!isUserRejection(revokeErr)) {
+            console.warn("Wallet revocation not supported:", revokeErr);
+          }
+        }
+      }
+
+      setAccount("");
+      setBalance("");
+      setRawWei("");
+      setWrongNetwork(false);
+
+      // Smoothly refresh after clearing to purge state
+      window.setTimeout(() => {
+        setIsRefreshing(false);
+        window.location.reload();
+      }, 350);
+    } catch (err) {
+      console.error("Error during disconnect:", err);
+      setIsRefreshing(false);
+    }
   }, []);
+
+  const switchAccount = useCallback(async (): Promise<boolean> => {
+    if (typeof window === "undefined" || !window.ethereum) return false;
+    setIsRefreshing(true);
+    try {
+      // Request permissions forces MetaMask / wallet to display the account selection dialog
+      try {
+        await window.ethereum.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+      } catch (permErr) {
+        if (isUserRejection(permErr)) {
+          setIsRefreshing(false);
+          return false;
+        }
+      }
+
+      // Re-request accounts to pick up the newly selected account
+      const accounts = (await window.ethereum.request({
+        method: "eth_requestAccounts",
+      })) as string[];
+
+      if (accounts && accounts.length > 0) {
+        const addr = accounts[0];
+        window.sessionStorage.removeItem(DISCONNECT_KEY);
+        window.localStorage.removeItem(DISCONNECT_KEY);
+        setAccount(addr);
+        await checkNetworkAndBalance(addr);
+        setIsRefreshing(false);
+        window.location.reload();
+        return true;
+      }
+    } catch (err) {
+      if (!isUserRejection(err)) {
+        console.error("Error switching account:", err);
+      }
+    }
+    setIsRefreshing(false);
+    return false;
+  }, [checkNetworkAndBalance]);
 
   const refreshAccount = useCallback(async (): Promise<string> => {
     if (typeof window === "undefined" || !window.ethereum) return "";
@@ -203,8 +278,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   // Eagerly connect if previously connected and not explicitly disconnected
   useEffect(() => {
     if (typeof window === "undefined" || !window.ethereum) return;
-    const isDisconnected = window.sessionStorage.getItem(DISCONNECT_KEY) === "true";
-    if (isDisconnected) return;
+    const isSessionDisconnected = window.sessionStorage.getItem(DISCONNECT_KEY) === "true";
+    const isLocalDisconnected = window.localStorage.getItem(DISCONNECT_KEY) === "true";
+    if (isSessionDisconnected || isLocalDisconnected) return;
 
     window.ethereum
       .request({ method: "eth_accounts" })
@@ -221,6 +297,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     const handleAccountsChanged = (accs: unknown) => {
       const list = accs as string[];
       if (list && list.length > 0) {
+        window.sessionStorage.removeItem(DISCONNECT_KEY);
+        window.localStorage.removeItem(DISCONNECT_KEY);
         setAccount(list[0]);
         checkNetworkAndBalance(list[0]);
       } else {
@@ -251,9 +329,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       rawWei,
       isConnected: Boolean(account),
       isConnecting,
+      isRefreshing,
       wrongNetwork,
       connect,
       disconnect,
+      switchAccount,
       switchNetwork,
       refreshAccount,
       getSignerClient,
@@ -265,9 +345,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       balance,
       rawWei,
       isConnecting,
+      isRefreshing,
       wrongNetwork,
       connect,
       disconnect,
+      switchAccount,
       switchNetwork,
       refreshAccount,
       getSignerClient,

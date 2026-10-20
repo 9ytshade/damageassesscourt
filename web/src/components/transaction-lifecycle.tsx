@@ -4,13 +4,115 @@ import React from "react";
 import { TxStatus } from "@/types/damageassesscourt";
 import { CheckCircleIcon, ExclamationTriangleIcon, SpinnerIcon } from "./icons";
 
-interface TransactionLifecycleProps {
-  status: TxStatus;
+export type TxState = "idle" | "signing" | "broadcasting" | "waiting" | "confirmed" | "error";
+
+export interface TransactionLifecycleProps {
+  status?: TxStatus;
+  state?: TxState;
+  isOpen?: boolean;
+  txHash?: string;
+  errorMessage?: string;
+  title?: string;
+  actionLabel?: string;
   onReset?: () => void;
+  onClose?: () => void;
+  onConfirmedAction?: () => void;
 }
 
-export function TransactionLifecycle({ status, onReset }: TransactionLifecycleProps) {
-  if (status.step === "IDLE") return null;
+export function TransactionLifecycle({
+  status,
+  state,
+  isOpen,
+  txHash,
+  errorMessage,
+  title,
+  actionLabel,
+  onReset,
+  onClose,
+  onConfirmedAction,
+}: TransactionLifecycleProps) {
+  // If used as modal with isOpen / state props
+  if (isOpen !== undefined) {
+    if (!isOpen || state === "idle") return null;
+
+    const isPending = state === "signing" || state === "broadcasting" || state === "waiting";
+    const isConfirmed = state === "confirmed";
+    const isErr = state === "error";
+
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 text-left"
+      >
+        <div className="w-full max-w-md rounded-2xl border border-[#23252a] bg-[#0c0d0e] p-6 shadow-2xl relative">
+          <div className="flex items-center gap-3 mb-4">
+            {isPending && <SpinnerIcon className="h-6 w-6 text-[#ffb829] animate-spin shrink-0" />}
+            {isConfirmed && <CheckCircleIcon className="h-6 w-6 text-emerald-400 shrink-0" />}
+            {isErr && <ExclamationTriangleIcon className="h-6 w-6 text-rose-500 shrink-0" />}
+            <div>
+              <h3 className="text-base font-bold text-white font-mono">
+                {title || "Transaction Execution"}
+              </h3>
+              <p className="text-xs text-[#8a8f98]">
+                {actionLabel || "GenLayer Studionet"}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-[#141518] p-4 border border-[#23252a] text-xs font-mono space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[#8a8f98]">Status:</span>
+              <span className="font-bold text-white uppercase">{state}</span>
+            </div>
+
+            {state === "signing" && (
+              <p className="text-[#ffb829]">Please confirm the transaction in your browser wallet...</p>
+            )}
+            {state === "broadcasting" && (
+              <p className="text-slate-300">Broadcasting transaction to GenLayer Studionet RPC...</p>
+            )}
+            {state === "waiting" && (
+              <p className="text-amber-300">Waiting for validator AI consensus finality on Studionet...</p>
+            )}
+            {isConfirmed && (
+              <p className="text-emerald-400 font-semibold">Transaction accepted and finalized on-chain!</p>
+            )}
+            {isErr && (
+              <p className="text-rose-400 break-words">{errorMessage || "Transaction was rejected or failed."}</p>
+            )}
+
+            {txHash && (
+              <div className="pt-2 border-t border-[#23252a] text-[11px] break-all">
+                <span className="text-[#8a8f98] block">Transaction Hash:</span>
+                <span className="text-slate-200">{txHash}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-5 flex items-center justify-end gap-3">
+            {(isConfirmed || isErr) && (
+              <button
+                onClick={() => {
+                  if (isConfirmed && onConfirmedAction) {
+                    onConfirmedAction();
+                  } else if (onClose) {
+                    onClose();
+                  }
+                }}
+                className="btn-pill-gold text-xs px-5 py-2 font-mono"
+              >
+                {isConfirmed ? "Continue" : "Dismiss"}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback to inline component if used with status prop
+  if (!status || status.step === "IDLE") return null;
 
   const isPending =
     status.step === "PREPARING" ||

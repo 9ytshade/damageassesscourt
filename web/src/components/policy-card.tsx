@@ -9,15 +9,28 @@ import { ShieldIcon, FileTextIcon, ArrowRightIcon } from "@/components/icons";
 interface PolicyCardProps {
   policy: PolicyPool;
   onFileClaim?: (policy: PolicyPool) => void;
+  onViewTerms?: (policy: PolicyPool) => void;
+  onInspect?: (policy: PolicyPool) => void;
 }
 
-export function PolicyCard({ policy, onFileClaim }: PolicyCardProps) {
+export function PolicyCard({ policy, onFileClaim, onViewTerms, onInspect }: PolicyCardProps) {
+  const handleCardClick = () => {
+    if (onInspect) {
+      onInspect(policy);
+    } else if (onViewTerms) {
+      onViewTerms(policy);
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900/90 p-5 shadow-lg hover:border-slate-700 transition-all">
+    <div
+      onClick={handleCardClick}
+      className="flex flex-col justify-between rounded-xl border border-[#23252a] bg-[#0c0d0e] p-5 shadow-lg hover:border-[#383b3f] hover:-translate-y-0.5 transition-all cursor-pointer group"
+    >
       <div>
         {/* Header: ID, status chip, title */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="font-mono text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+          <span className="font-mono text-xs font-semibold text-[#ffb829] bg-[#ffb829]/10 px-2 py-0.5 rounded border border-[#ffb829]/20">
             Pool #{policy.id}
           </span>
           <span
@@ -29,67 +42,78 @@ export function PolicyCard({ policy, onFileClaim }: PolicyCardProps) {
           </span>
         </div>
 
-        <h3 className="text-base font-semibold text-white tracking-tight line-clamp-1">
+        <h3 className="text-base font-semibold text-white tracking-tight line-clamp-1 group-hover:text-[#ffb829] transition-colors">
           {policy.title}
         </h3>
-        <p className="mt-1 text-xs text-slate-400 line-clamp-2 leading-relaxed">
+        <p className="mt-1 text-xs text-[#8a8f98] line-clamp-2 leading-relaxed">
           {policy.description}
         </p>
 
         {/* Metric Chips Grid */}
-        <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-800/80 text-xs">
-          <div className="rounded-lg bg-slate-950/60 p-2 border border-slate-800/60">
-            <span className="text-[10px] text-slate-400 block uppercase font-medium">Escrow Capital</span>
+        <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#23252a] text-xs">
+          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
+            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Escrow Capital</span>
             <span className="font-semibold text-emerald-400 font-mono text-xs">
               {formatWei(policy.total_escrow_pool)} GEN
             </span>
           </div>
 
-          <div className="rounded-lg bg-slate-950/60 p-2 border border-slate-800/60">
-            <span className="text-[10px] text-slate-400 block uppercase font-medium">Max Claim Cap</span>
+          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
+            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Max Claim Cap</span>
             <span className="font-semibold text-slate-200 font-mono text-xs">
               {formatWei(policy.max_claim_cap)} GEN
             </span>
           </div>
 
-          <div className="rounded-lg bg-slate-950/60 p-2 border border-slate-800/60">
-            <span className="text-[10px] text-slate-400 block uppercase font-medium">Claimant Stake</span>
+          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
+            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Claimant Stake</span>
             <span className="font-medium text-slate-300 font-mono text-xs">
               {formatWei(policy.min_claimant_stake)} GEN
             </span>
           </div>
 
-          <div className="rounded-lg bg-slate-950/60 p-2 border border-slate-800/60">
-            <span className="text-[10px] text-slate-400 block uppercase font-medium">Active Claims</span>
-            <span className="font-medium text-amber-400 font-mono text-xs">
+          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
+            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Active Claims</span>
+            <span className="font-medium text-[#ffb829] font-mono text-xs">
               {policy.active_claims_count} Active / {policy.settled_claims_count} Settled
             </span>
           </div>
         </div>
 
         {/* Underwriter info */}
-        <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400">
+        <div className="mt-3 flex items-center justify-between text-[11px] text-[#8a8f98]">
           <span>Underwriter:</span>
           <span className="font-mono text-slate-300">{formatAddress(policy.underwriter)}</span>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="mt-5 pt-3 border-t border-slate-800/80 flex items-center gap-2">
-        {policy.is_active && onFileClaim && (
-          <button
-            onClick={() => onFileClaim(policy)}
-            className="flex-1 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 py-1.5 px-3 text-xs font-semibold text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-all shadow-sm shadow-amber-500/20"
-          >
-            File Damage Claim
-          </button>
+      <div className="mt-5 pt-3 border-t border-[#23252a] flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        {policy.is_active && (
+          onFileClaim ? (
+            <button
+              type="button"
+              onClick={() => onFileClaim(policy)}
+              className="flex-1 rounded-lg bg-[#ffb829] hover:bg-[#e5a420] py-1.5 px-3 text-xs font-semibold text-slate-950 transition-all shadow-sm shadow-[#ffb829]/20"
+            >
+              File Claim
+            </button>
+          ) : (
+            <Link
+              href={`/claims/submit?policyId=${policy.id}`}
+              className="flex-1 rounded-lg bg-[#ffb829] hover:bg-[#e5a420] py-1.5 px-3 text-xs font-semibold text-slate-950 text-center transition-all shadow-sm shadow-[#ffb829]/20"
+            >
+              File Claim
+            </Link>
+          )
         )}
-        <Link
-          href={`/policies#pool-${policy.id}`}
-          className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-800 py-1.5 px-3 text-xs font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+        <button
+          type="button"
+          onClick={() => onViewTerms?.(policy)}
+          className="inline-flex items-center justify-center gap-1 rounded-lg border border-[#23252a] bg-[#141518] py-1.5 px-3 text-xs font-medium text-[#d0d6e0] hover:bg-[#23252a] hover:text-white transition-colors"
         >
           View Terms
-        </Link>
+        </button>
       </div>
     </div>
   );

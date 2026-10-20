@@ -22,6 +22,9 @@ export interface PolicyPool {
   title: string;
   description: string;
   policy_terms: string;
+  policy_terms_text?: string;
+  covered_perils?: string[];
+  deductible_bps?: number;
   total_escrow_pool: number | string;
   max_claim_cap: number | string;
   max_claim_limit?: number | string;
@@ -44,10 +47,13 @@ export interface Claim {
   damage_description: string;
   repair_estimate_url: string;
   incident_proof_url: string;
+  evidence_urls?: string[];
   evidence_hash: string;
   claimed_amount: number | string;
   claimant_stake: number | string;
   underwriter_deposit: number | string;
+  settlement_bps?: number;
+  approved_payout?: number | string;
   status: ClaimStatus;
   contest_reason: string;
   defense_rebuttal: string;
@@ -94,4 +100,7 @@ export interface BpsSettlementCalculation {
   claimantTotalPayout: bigint;
   underwriterRefund: bigint;
   poolRemainingDelta: bigint;
+  grossPayout?: string;
+  claimantRefundedStake?: string;
+  netClaimantReceived?: string;
 }

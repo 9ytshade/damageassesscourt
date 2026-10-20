@@ -71,26 +71,26 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="space-y-14 pb-16">
-      {/* Hero Section matching Dala Reference with Interactive 3D Constellation */}
-      <section className="relative overflow-hidden border-b border-[#23252a] bg-[#000000] pt-8 pb-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="space-y-16 pb-20">
+      {/* Hero Section with Interactive 3D Constellation */}
+      <section className="relative overflow-hidden border-b border-[#22242c] bg-[#000000] pt-8 pb-16 lg:py-24">
+        <div className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Headline & Narrative Column */}
-            <div className="lg:col-span-7 space-y-6 text-left z-10">
-              {/* Amber Category Pill Tag */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#ffb829]/30 bg-[#ffb829]/10 px-3.5 py-1 text-xs font-mono text-[#ffb829]">
-                <SparklesIcon className="h-3.5 w-3.5" />
+            <div className="lg:col-span-7 space-y-7 text-left z-10">
+              {/* Category Pill Tag */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#2a2d36] bg-[#121317] px-4 py-1.5 text-xs font-mono text-[#d8dbe4]">
+                <SparklesIcon className="h-3.5 w-3.5 text-[#a4a8b7]" />
                 <span>GENLAYER STUDIONET 61999 &middot; DAMAGE COURT</span>
               </div>
 
               {/* Oversized High-Contrast Headline */}
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.05]">
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.04]">
                 Where Ambiguous Damage Meets On-Chain Consensus.
               </h1>
 
               {/* Clear Precision Narrative */}
-              <p className="text-base sm:text-lg text-[#8a8f98] leading-relaxed max-w-2xl">
+              <p className="text-base sm:text-xl text-[#9ea3b2] leading-relaxed max-w-2xl">
                 Beyond binary parametric triggers. DamageAssessCourt settles catastrophic property claims by
                 cross-examining physical site photography, weather radar feeds, and ambiguous policy exclusion
                 clauses through multi-validator AI consensus and continuous 0 to 10,000 Basis Points indemnity math.
@@ -100,7 +100,7 @@ export default function DashboardPage() {
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
                   href="/claims"
-                  className="btn-pill-gold font-mono"
+                  className="btn-pill-primary font-mono text-sm"
                 >
                   <span>Explore Docket</span>
                   <ArrowRightIcon className="h-4 w-4" />
@@ -108,23 +108,23 @@ export default function DashboardPage() {
 
                 <Link
                   href="/policies/create"
-                  className="btn-pill-primary font-mono"
+                  className="btn-pill-dark font-mono text-sm"
                 >
-                  <PlusIcon className="h-4 w-4" />
+                  <PlusIcon className="h-4 w-4 text-[#9ea3b2]" />
                   <span>Underwrite Risk Pool</span>
                 </Link>
 
                 <Link
                   href="/protocol"
-                  className="btn-ghost font-mono text-xs"
+                  className="btn-ghost font-mono text-sm"
                 >
                   Protocol Guide &rarr;
                 </Link>
               </div>
 
               {isFallback && (
-                <div className="pt-2 text-xs text-[#ffb829] flex items-center gap-2 font-mono">
-                  <span className="h-2 w-2 rounded-full bg-[#ffb829] animate-pulse" />
+                <div className="pt-2 text-xs text-[#a4a8b7] flex items-center gap-2 font-mono">
+                  <span className="h-2 w-2 rounded-full bg-[#f0f2f5] animate-pulse" />
                   Live contract synchronized with Studionet (Chain ID 61999).
                 </div>
               )}
@@ -132,7 +132,7 @@ export default function DashboardPage() {
 
             {/* Right Interactive 3D Particle Constellation */}
             <div className="lg:col-span-5 relative flex items-center justify-center">
-              <div className="relative w-full aspect-square max-w-[500px]">
+              <div className="relative w-full aspect-square max-w-[650px]">
                 <HeroConstellation />
               </div>
             </div>
@@ -141,59 +141,59 @@ export default function DashboardPage() {
       </section>
 
       {/* Protocol Metrics Proof Bar */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="linear-card p-5">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-[#8a8f98]">
+      <section className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="linear-card p-6">
+            <div className="text-xs uppercase font-mono tracking-wider text-[#8a8f9c]">
               Total Policy Pools
             </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <div className="mt-2 text-3xl sm:text-4xl font-extrabold text-white font-mono">
               {totals.policyCount || policies.length}
             </div>
-            <div className="text-[11px] text-[#8a8f98] mt-1">Active risk facilities</div>
+            <div className="text-xs text-[#8a8f9c] mt-1.5">Active risk facilities</div>
           </div>
 
-          <div className="linear-card p-5">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-[#8a8f98]">
+          <div className="linear-card p-6">
+            <div className="text-xs uppercase font-mono tracking-wider text-[#8a8f9c]">
               Claims Adjudicated
             </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <div className="mt-2 text-3xl sm:text-4xl font-extrabold text-white font-mono">
               {totals.claimCount || claims.length}
             </div>
-            <div className="text-[11px] text-[#8a8f98] mt-1">Property damage filings</div>
+            <div className="text-xs text-[#8a8f9c] mt-1.5">Property damage filings</div>
           </div>
 
-          <div className="linear-card p-5">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-[#8a8f98]">
+          <div className="linear-card p-6">
+            <div className="text-xs uppercase font-mono tracking-wider text-[#8a8f9c]">
               Consensus Verdicts
             </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-[#ffb829] font-mono">
+            <div className="mt-2 text-3xl sm:text-4xl font-extrabold text-[#f0f2f5] font-mono">
               {totals.verdictCount || 1}
             </div>
-            <div className="text-[11px] text-[#8a8f98] mt-1">Equivalence principle rulings</div>
+            <div className="text-xs text-[#8a8f9c] mt-1.5">Equivalence principle rulings</div>
           </div>
 
-          <div className="linear-card p-5">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-[#8a8f98]">
+          <div className="linear-card p-6">
+            <div className="text-xs uppercase font-mono tracking-wider text-[#8a8f9c]">
               Indemnity Precision
             </div>
-            <div className="mt-2 text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
+            <div className="mt-2 text-3xl sm:text-4xl font-extrabold text-white font-mono">
               10,000 BPS
             </div>
-            <div className="text-[11px] text-[#8a8f98] mt-1">Continuous 0.01% resolution</div>
+            <div className="text-xs text-[#8a8f9c] mt-1.5">Continuous 0.01% resolution</div>
           </div>
         </div>
       </section>
 
       {/* Live Property Damage Claims Docket Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-[#23252a]">
+      <section className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:px-12 space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-[#22242c]">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 font-mono">
-              <GavelIcon className="h-6 w-6 text-[#ffb829]" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3 font-mono">
+              <GavelIcon className="h-7 w-7 text-white" />
               Property Damage Court Docket
             </h2>
-            <p className="text-xs sm:text-sm text-[#8a8f98] mt-0.5">
+            <p className="text-sm sm:text-base text-[#8a8f9c] mt-1">
               Live claims undergoing underwriter review, defense rebuttal, or AI Magistrate consensus adjudication.
             </p>
           </div>
@@ -209,10 +209,10 @@ export default function DashboardPage() {
               <button
                 key={tab.id}
                 onClick={() => setClaimFilter(tab.id)}
-                className={`px-3 py-1.5 rounded-full border transition-all ${
+                className={`px-4 py-2 rounded-full border transition-all text-xs font-semibold ${
                   claimFilter === tab.id
-                    ? "border-[#ffb829] bg-[#ffb829]/10 text-[#ffb829] font-bold"
-                    : "border-[#23252a] bg-[#0c0d0e] text-[#8a8f98] hover:text-white"
+                    ? "border-[#484c59] bg-[#1e2027] text-white"
+                    : "border-[#22242c] bg-[#0c0d10] text-[#8a8f9c] hover:text-white hover:bg-[#141519]"
                 }`}
               >
                 {tab.label}
@@ -222,11 +222,11 @@ export default function DashboardPage() {
         </div>
 
         {filteredClaims.length === 0 ? (
-          <div className="rounded-2xl border border-[#23252a] bg-[#0c0d0e] p-12 text-center text-[#8a8f98] font-mono text-sm">
+          <div className="rounded-2xl border border-[#22242c] bg-[#0c0d10] p-16 text-center text-[#8a8f9c] font-mono text-sm">
             No claims found under filter &quot;{claimFilter}&quot;.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredClaims.map((claim) => (
               <ClaimCard
                 key={claim.id}
@@ -239,30 +239,30 @@ export default function DashboardPage() {
       </section>
 
       {/* Featured Underwritten Risk Pools Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-5 pt-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-[#23252a]">
+      <section className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:px-12 space-y-6 pt-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-[#22242c]">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5 font-mono">
-              <ShieldCheckIcon className="h-6 w-6 text-emerald-400" />
-              Underwritten Policy Pools
+            <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3 font-mono">
+              <ShieldCheckIcon className="h-7 w-7 text-white" />
+              Underwritten Risk Pools
             </h2>
-            <p className="text-xs sm:text-sm text-[#8a8f98] mt-0.5">
+            <p className="text-sm sm:text-base text-[#8a8f9c] mt-1">
               Pre-funded indemnity pools backing property risks with transparent coverage terms.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 text-sm font-mono">
             <Link
               href="/policies/create"
-              className="inline-flex items-center gap-1.5 text-xs font-mono text-[#ffb829] hover:underline"
+              className="inline-flex items-center gap-1.5 text-white hover:underline font-semibold"
             >
-              <PlusIcon className="h-3.5 w-3.5" />
+              <PlusIcon className="h-4 w-4" />
               Create Risk Pool
             </Link>
-            <span className="text-[#383b3f]">&middot;</span>
+            <span className="text-[#333640]">&middot;</span>
             <Link
               href="/policies"
-              className="text-xs font-mono text-[#8a8f98] hover:text-white"
+              className="text-[#8a8f9c] hover:text-white"
             >
               View all pools &rarr;
             </Link>
@@ -270,12 +270,12 @@ export default function DashboardPage() {
         </div>
 
         {policies.length === 0 ? (
-          <div className="rounded-2xl border border-[#23252a] bg-[#0c0d0e] p-12 text-center text-[#8a8f98] font-mono text-sm">
+          <div className="rounded-2xl border border-[#22242c] bg-[#0c0d10] p-16 text-center text-[#8a8f9c] font-mono text-sm">
             No active policy pools found.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {policies.slice(0, 4).map((policy) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {policies.slice(0, 6).map((policy) => (
               <PolicyCard
                 key={policy.id}
                 policy={policy}

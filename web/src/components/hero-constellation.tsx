@@ -26,8 +26,8 @@ export function HeroConstellation() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 600);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 560);
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 700);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 620);
 
     const handleResize = () => {
       if (!canvas || !canvas.parentElement) return;
@@ -36,15 +36,14 @@ export function HeroConstellation() {
     };
     window.addEventListener("resize", handleResize);
 
+    // Refined Monochromatic Palette: Pure White, Platinum, Silver, Slate, and Charcoal
     const colors = [
-      "#8052ff", // Electric Iris
-      "#966eff", // Light Iris
-      "#ffb829", // Saffron Spark
-      "#ffc857", // Light Gold
-      "#15846e", // Deep Verdant
-      "#02b8cc", // Signal Teal
-      "#ffffff", // Bone White
-      "#e4f222", // Acid Lime
+      "#ffffff", // Pure White
+      "#f2f4f8", // Platinum
+      "#d8dce6", // Pale Silver
+      "#b0b5c4", // Mid Silver
+      "#7e8394", // Slate Grey
+      "#484c59", // Deep Charcoal
     ];
 
     const particleCount = 280;
@@ -56,11 +55,11 @@ export function HeroConstellation() {
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
       const phi = Math.acos(2.0 * v - 1.0);
-      const r = Math.cbrt(Math.random()) * 190;
+      const r = Math.cbrt(Math.random()) * 210;
 
       // Ellipsoid stretch
-      const bx = r * Math.sin(phi) * Math.cos(theta) * 1.15;
-      const by = r * Math.sin(phi) * Math.sin(theta) * 0.9;
+      const bx = r * Math.sin(phi) * Math.cos(theta) * 1.18;
+      const by = r * Math.sin(phi) * Math.sin(theta) * 0.95;
       const bz = r * Math.cos(phi) * 1.05;
 
       particles.push({
@@ -70,18 +69,16 @@ export function HeroConstellation() {
         baseX: bx,
         baseY: by,
         baseZ: bz,
-        size: Math.random() * 2.8 + 1.2,
+        size: Math.random() * 2.6 + 1.2,
         color: colors[Math.floor(Math.random() * colors.length)],
         isTriangle: Math.random() > 0.45,
         angle: Math.random() * Math.PI * 2,
-        speed: (Math.random() - 0.5) * 0.006,
+        speed: (Math.random() - 0.5) * 0.005,
       });
     }
 
     let rotX = 0.15;
     let rotY = 0;
-    let mouseX = 0;
-    let mouseY = 0;
     let targetRotY = 0;
     let targetRotX = 0.15;
 
@@ -89,8 +86,8 @@ export function HeroConstellation() {
       const rect = canvas.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / width - 0.5) * 2;
       const ny = ((e.clientY - rect.top) / height - 0.5) * 2;
-      targetRotY = nx * 0.4;
-      targetRotX = 0.15 + ny * 0.3;
+      targetRotY = nx * 0.35;
+      targetRotX = 0.15 + ny * 0.25;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -120,14 +117,14 @@ export function HeroConstellation() {
     }
 
     const render = () => {
-      rotY += (targetRotY - rotY) * 0.04 + 0.003;
+      rotY += (targetRotY - rotY) * 0.04 + 0.0025;
       rotX += (targetRotX - rotX) * 0.04;
 
       ctx.clearRect(0, 0, width, height);
 
       const cx = width / 2;
       const cy = height / 2;
-      const fov = 380;
+      const fov = 420;
 
       // Project particles to 2D
       const projected = particles.map((p) => {
@@ -136,19 +133,19 @@ export function HeroConstellation() {
         // Rotate around Y
         const cosY = Math.cos(rotY);
         const sinY = Math.sin(rotY);
-        let x1 = p.baseX * cosY - p.baseZ * sinY;
-        let z1 = p.baseZ * cosY + p.baseX * sinY;
+        const x1 = p.baseX * cosY - p.baseZ * sinY;
+        const z1 = p.baseZ * cosY + p.baseX * sinY;
 
         // Rotate around X
         const cosX = Math.cos(rotX);
         const sinX = Math.sin(rotX);
-        let y1 = p.baseY * cosX - z1 * sinX;
-        let z2 = z1 * cosX + p.baseY * sinX;
+        const y1 = p.baseY * cosX - z1 * sinX;
+        const z2 = z1 * cosX + p.baseY * sinX;
 
-        const scale = fov / (fov + z2 + 200);
+        const scale = fov / (fov + z2 + 220);
         const projX = cx + x1 * scale;
         const projY = cy + y1 * scale;
-        const alpha = Math.min(Math.max((z2 + 220) / 440, 0.15), 0.95);
+        const alpha = Math.min(Math.max((z2 + 240) / 480, 0.12), 0.95);
 
         return {
           ...p,
@@ -163,7 +160,7 @@ export function HeroConstellation() {
       // Sort by depth
       projected.sort((a, b) => a.z2 - b.z2);
 
-      // Connect nearby particles with hairline constellation edges
+      // Connect nearby particles with subtle hairline constellation edges
       for (let i = 0; i < projected.length; i++) {
         const p1 = projected[i];
         for (let j = i + 1; j < projected.length; j++) {
@@ -172,13 +169,13 @@ export function HeroConstellation() {
           const dy = p1.projY - p2.projY;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 52) {
+          if (dist < 56) {
             ctx.beginPath();
             ctx.moveTo(p1.projX, p1.projY);
             ctx.lineTo(p2.projX, p2.projY);
             ctx.strokeStyle = p1.color;
-            ctx.globalAlpha = (1 - dist / 52) * 0.18 * p1.alpha;
-            ctx.lineWidth = 0.6;
+            ctx.globalAlpha = (1 - dist / 56) * 0.16 * p1.alpha;
+            ctx.lineWidth = 0.55;
             ctx.stroke();
           }
         }
@@ -210,7 +207,7 @@ export function HeroConstellation() {
   }, []);
 
   return (
-    <div className="relative w-full h-[480px] sm:h-[560px] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full h-[520px] sm:h-[600px] lg:h-[660px] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none z-10" />
       <canvas
         ref={canvasRef}

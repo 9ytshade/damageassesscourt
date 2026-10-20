@@ -58,8 +58,8 @@ export function WalletConnect() {
 
   if (isRefreshing) {
     return (
-      <div className="inline-flex items-center gap-2 rounded-full border border-[#23252a] bg-[#0c0d0e] px-4 py-2 text-xs font-mono text-[#ffb829]">
-        <span className="h-2 w-2 rounded-full bg-[#ffb829] animate-ping" />
+      <div className="inline-flex items-center gap-2 rounded-full border border-[#2d2f38] bg-[#141519] px-4 py-2 text-xs font-mono text-[#d8dbe4]">
+        <span className="h-2 w-2 rounded-full bg-[#f0f2f5] animate-ping" />
         <span>REFRESHING...</span>
       </div>
     );
@@ -82,9 +82,9 @@ export function WalletConnect() {
       <button
         onClick={connect}
         disabled={isConnecting}
-        className="btn-pill-gold text-xs"
+        className="inline-flex items-center gap-2 rounded-full border border-[#2d2f38] bg-[#16171b] hover:bg-[#202127] hover:border-[#3e424f] px-4 py-2 text-sm font-semibold text-white transition-all shadow-sm disabled:opacity-50"
       >
-        <WalletIcon className="h-4 w-4" />
+        <WalletIcon className="h-4 w-4 text-[#9ea3b2]" />
         <span>{isConnecting ? "CONNECTING..." : "CONNECT WALLET"}</span>
       </button>
     );
@@ -95,53 +95,53 @@ export function WalletConnect() {
       {/* Pill Trigger */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="inline-flex items-center gap-2.5 rounded-full border border-[#23252a] bg-[#0c0d0e] px-3.5 py-1.5 text-xs font-mono text-[#d0d6e0] hover:border-[#383b3f] hover:bg-[#141518] transition-all shadow-sm"
+        className="inline-flex items-center gap-2.5 rounded-full border border-[#282a32] bg-[#121317] px-4 py-2 text-sm font-mono text-[#d8dbe4] hover:border-[#3b3e4a] hover:bg-[#1a1c22] transition-all shadow-sm"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
         <span className="font-semibold text-white tracking-tight">{formatAddress(account)}</span>
-        <span className="h-3 w-px bg-[#23252a]" />
-        <span className="text-[#8a8f98]">{balance ? `${balance} GEN` : "0 GEN"}</span>
-        <span className="text-[10px] text-[#8a8f98] ml-0.5" aria-hidden="true">
+        <span className="h-3.5 w-px bg-[#282a32]" />
+        <span className="text-[#9ea3b2]">{balance ? `${balance} GEN` : "0 GEN"}</span>
+        <span className="text-xs text-[#9ea3b2] ml-0.5" aria-hidden="true">
           ⌄
         </span>
       </button>
 
       {/* Popover Card */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-[#23252a] bg-[#0c0d0e] p-4 shadow-2xl z-50 animate-fade-in text-left">
+        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-[#24262f] bg-[#0d0e11] p-4 shadow-2xl z-50 animate-fade-in text-left">
           {/* Header Row */}
-          <div className="flex items-center justify-between border-b border-[#23252a] pb-2.5 mb-3 text-[10px] font-mono tracking-wider">
-            <span className="text-[#8a8f98] uppercase">CONNECTED ACCOUNT</span>
-            <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+          <div className="flex items-center justify-between border-b border-[#24262f] pb-2.5 mb-3 text-xs font-mono tracking-wider">
+            <span className="text-[#9ea3b2] uppercase font-semibold">CONNECTED ACCOUNT</span>
+            <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold text-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               Studionet
             </span>
           </div>
 
           {/* Full Address Monospace Container */}
-          <div className="rounded-lg bg-[#141518] p-2.5 border border-[#23252a] text-xs font-mono text-[#d0d6e0] break-all select-all">
+          <div className="rounded-lg bg-[#15161b] p-3 border border-[#24262f] text-xs font-mono text-[#d8dbe4] break-all select-all">
             {account}
           </div>
 
           {/* Balance Row */}
-          <div className="mt-3 flex items-center justify-between text-xs px-1">
-            <span className="text-[#8a8f98]">Balance</span>
+          <div className="mt-3 flex items-center justify-between text-sm px-1">
+            <span className="text-[#9ea3b2]">Balance</span>
             <span className="font-mono font-bold text-white">
               {balance ? `${balance} GEN` : "0 GEN"}
             </span>
           </div>
 
           {/* Action List */}
-          <div className="mt-4 space-y-1.5 pt-3 border-t border-[#23252a]">
+          <div className="mt-4 space-y-1.5 pt-3 border-t border-[#24262f]">
             {/* Copy Address */}
             <button
               onClick={handleCopy}
-              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-[#d0d6e0] hover:bg-[#141518] hover:text-white transition-colors"
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-[#d8dbe4] hover:bg-[#1a1c22] hover:text-white transition-colors"
             >
               <span>{copied ? "Address Copied!" : "Copy Address"}</span>
-              <span className="text-[10px] text-[#8a8f98] font-mono">
+              <span className="text-xs text-[#9ea3b2] font-mono">
                 {copied ? "✓" : "CLIPBOARD"}
               </span>
             </button>
@@ -149,19 +149,19 @@ export function WalletConnect() {
             {/* Switch Account */}
             <button
               onClick={handleSwitchAccount}
-              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-[#d0d6e0] hover:bg-[#141518] hover:text-[#ffb829] transition-colors"
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-[#d8dbe4] hover:bg-[#1a1c22] hover:text-white transition-colors"
             >
               <span>Switch / Change Account</span>
-              <span className="text-[10px] text-[#8a8f98] font-mono">PICKER ↗</span>
+              <span className="text-xs text-[#9ea3b2] font-mono">PICKER &rarr;</span>
             </button>
 
             {/* Disconnect Wallet */}
             <button
               onClick={handleDisconnect}
-              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
+              className="w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
             >
               <span>Disconnect Wallet</span>
-              <span className="text-[10px] text-rose-400 font-mono">LOGOUT</span>
+              <span className="text-xs text-rose-400 font-mono">LOGOUT</span>
             </button>
           </div>
         </div>

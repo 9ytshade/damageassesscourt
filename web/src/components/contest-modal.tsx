@@ -101,11 +101,11 @@ export function ContestModal({ claim, isOpen, onClose, onSuccess }: ContestModal
     txStatus.step === "ACCEPTED";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-xl rounded-2xl border border-court-amber/30 bg-court-midnight p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-2 text-court-amber">
-            <GavelIcon className="h-6 w-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-xl rounded-3xl border border-[#2d2f38] bg-[#14151a] p-6 sm:p-7 shadow-2xl">
+        <div className="flex items-center justify-between pb-4 border-b border-[#22242c]">
+          <div className="flex items-center gap-2.5 text-white">
+            <GavelIcon className="h-5 w-5 text-white" />
             <h3 className="text-lg font-bold text-white font-mono">
               Contest Damage Claim #{claim.id}
             </h3>
@@ -114,35 +114,35 @@ export function ContestModal({ claim, isOpen, onClose, onSuccess }: ContestModal
             type="button"
             onClick={onClose}
             disabled={isWorking}
-            className="text-slate-400 hover:text-white transition-colors disabled:opacity-50"
+            className="text-[#9ea3b2] hover:text-white transition-colors disabled:opacity-50"
           >
             <CloseIcon className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleContest} className="mt-4 space-y-4">
-          <div className="rounded-lg bg-slate-900/80 p-3 border border-slate-800 text-xs space-y-1.5">
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Claim Title:</span>
-              <span className="font-semibold text-white truncate max-w-[320px]">{claim.damage_title}</span>
+        <form onSubmit={handleContest} className="mt-5 space-y-4">
+          <div className="rounded-xl bg-[#0d0e12] p-4 border border-[#22242c] text-xs space-y-2">
+            <div className="flex justify-between text-[#9ea3b2]">
+              <span>Claim Title:</span>
+              <span className="font-semibold text-white truncate max-w-[300px]">{claim.damage_title}</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Claimed Indemnity:</span>
-              <span className="font-mono text-amber-300">{formatWeiAmount(claim.claimed_amount)}</span>
+            <div className="flex justify-between text-[#9ea3b2]">
+              <span>Claimed Indemnity:</span>
+              <span className="font-mono font-bold text-white">{formatWeiAmount(claim.claimed_amount)}</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Matching Dispute Deposit Required:</span>
-              <span className="font-mono font-semibold text-amber-400">
+            <div className="flex justify-between text-[#9ea3b2]">
+              <span>Matching Dispute Deposit Required:</span>
+              <span className="font-mono font-bold text-white">
                 {formatWeiAmount(claim.claimant_stake)}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 pt-1">
+            <p className="text-[11px] text-[#8a8f9d] pt-1 border-t border-[#1c1d25]">
               Note: This deposit matches the claimant anti-spam stake and is held in court escrow until magistrate ruling.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-[#d8dbe4] mb-1.5 font-semibold">
               Underwriter Dispute Grievance / Exclusion Basis
             </label>
             <textarea
@@ -151,16 +151,16 @@ export function ContestModal({ claim, isOpen, onClose, onSuccess }: ContestModal
               onChange={(e) => setGrievance(e.target.value)}
               placeholder="Specify the exact exclusion clauses, unverified contractor charges, or pre-existing condition reasons..."
               disabled={isWorking}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900/90 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-court-amber focus:outline-none disabled:opacity-50"
+              className="w-full rounded-xl border border-[#2d2f38] bg-[#0d0e12] px-3.5 py-2.5 text-sm text-[#f0f2f5] placeholder-[#6f7384] focus:border-white focus:outline-none disabled:opacity-50 transition-colors"
             />
-            <div className="flex justify-between items-center text-[11px] text-slate-400 mt-1">
+            <div className="flex justify-between items-center text-[11px] font-mono text-[#8a8f9d] mt-1.5">
               <span>Minimum 20 characters required.</span>
               <span>{grievance.length}/3,000</span>
             </div>
           </div>
 
           {validationError && (
-            <div className="rounded-lg border border-red-500/30 bg-red-950/30 p-2.5 text-xs text-red-300">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-950/30 p-3 text-xs text-rose-300">
               {validationError}
             </div>
           )}
@@ -172,14 +172,14 @@ export function ContestModal({ claim, isOpen, onClose, onSuccess }: ContestModal
               type="button"
               onClick={onClose}
               disabled={isWorking}
-              className="px-4 py-2 rounded-lg border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-full border border-[#2d2f38] text-xs font-semibold text-[#d8dbe4] hover:bg-[#1f212a] hover:text-white transition-colors disabled:opacity-50 font-mono uppercase"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isWorking || grievance.trim().length < 20}
-              className="px-5 py-2 rounded-lg bg-court-amber hover:bg-amber-400 text-slate-950 text-sm font-bold shadow-lg shadow-amber-950/30 transition-all disabled:opacity-50 font-mono"
+              className="px-5 py-2.5 rounded-full bg-white hover:bg-[#e4e7ee] text-black text-xs font-bold shadow-lg transition-all disabled:opacity-50 font-mono uppercase tracking-wider"
             >
               {isWorking ? "Submitting..." : "Submit Contest & Escrow Deposit"}
             </button>

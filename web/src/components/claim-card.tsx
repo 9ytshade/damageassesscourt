@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Claim } from "@/types/damageassesscourt";
 import { formatAddress, formatWei, formatTimestamp } from "@/lib/safety";
-import { GavelIcon, ArrowRightIcon, ExternalLinkIcon, ShieldIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/icons";
 
 interface ClaimCardProps {
   claim: Claim;
@@ -42,16 +42,16 @@ export function ClaimCard({ claim, onInspect }: ClaimCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className="flex flex-col justify-between rounded-xl border border-[#23252a] bg-[#0c0d0e] p-5 shadow-lg hover:border-[#383b3f] hover:-translate-y-0.5 transition-all cursor-pointer group"
+      className="flex flex-col justify-between rounded-2xl border border-[#22242c] bg-[#0c0d10] p-6 shadow-lg hover:border-[#353843] hover:-translate-y-0.5 transition-all cursor-pointer group"
     >
       <div>
         {/* Top: ID, Policy ID, Status */}
-        <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center justify-between gap-3 mb-3.5">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-semibold text-[#ffb829] bg-[#ffb829]/10 px-2 py-0.5 rounded border border-[#ffb829]/20">
+            <span className="font-mono text-xs font-semibold text-[#f0f2f5] bg-[#16171b] px-3 py-1 rounded-lg border border-[#2b2d36]">
               Claim #{claim.id}
             </span>
-            <span className="text-[11px] text-[#8a8f98] font-mono">
+            <span className="text-xs text-[#8a8f9c] font-mono">
               Policy #{claim.policy_id}
             </span>
           </div>
@@ -59,53 +59,57 @@ export function ClaimCard({ claim, onInspect }: ClaimCardProps) {
         </div>
 
         {/* Title & Narrative */}
-        <h4 className="text-sm font-semibold text-white tracking-tight line-clamp-1 group-hover:text-[#ffb829] transition-colors">
+        <h4 className="text-base font-bold text-white tracking-tight line-clamp-1 group-hover:text-[#d8dbe4] transition-colors">
           {claim.damage_title}
         </h4>
-        <p className="mt-1 text-xs text-[#8a8f98] line-clamp-2 leading-relaxed">
+        <p className="mt-1.5 text-sm text-[#9ea3b2] line-clamp-2 leading-relaxed">
           {claim.damage_description}
         </p>
 
         {/* Financial Metrics Chips */}
-        <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#23252a] text-xs">
-          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Claimed Amount</span>
-            <span className="font-semibold text-[#ffb829] font-mono text-xs">
+        <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-[#1c1d23] text-xs">
+          <div className="rounded-xl bg-[#141519] p-3 border border-[#22242c]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
+              Claimed Amount
+            </span>
+            <span className="font-bold text-white font-mono text-sm mt-0.5 block">
               {formatWei(claim.claimed_amount)} GEN
             </span>
           </div>
 
-          <div className="rounded-lg bg-[#141518] p-2 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-medium">Claimant Stake</span>
-            <span className="font-medium text-slate-300 font-mono text-xs">
+          <div className="rounded-xl bg-[#141519] p-3 border border-[#22242c]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
+              Claimant Stake
+            </span>
+            <span className="font-medium text-[#d8dbe4] font-mono text-sm mt-0.5 block">
               {formatWei(claim.claimant_stake)} GEN
             </span>
           </div>
         </div>
 
-        {/* Evidence preview links */}
-        <div className="mt-3 flex items-center justify-between text-[11px] text-[#8a8f98] pt-2 border-t border-[#23252a]">
+        {/* Claimant info */}
+        <div className="mt-4 flex items-center justify-between text-xs text-[#8a8f9c] pt-3 border-t border-[#1c1d23]">
           <span>Claimant:</span>
-          <span className="font-mono text-slate-300">{formatAddress(claim.claimant)}</span>
+          <span className="font-mono text-[#d8dbe4]">{formatAddress(claim.claimant)}</span>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="mt-4 pt-3 border-t border-[#23252a] flex items-center justify-between">
-        <span className="text-[11px] text-[#8a8f98]">
+      <div className="mt-5 pt-4 border-t border-[#1c1d23] flex items-center justify-between">
+        <span className="text-xs text-[#8a8f9c]">
           Submitted {formatTimestamp(claim.submitted_at)}
         </span>
         <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
             onClick={() => onInspect?.(claim)}
-            className="inline-flex items-center gap-1 rounded-lg bg-[#141518] px-2.5 py-1 text-xs font-medium text-[#d0d6e0] hover:bg-[#23252a] hover:text-white transition-colors border border-[#23252a]"
+            className="inline-flex items-center gap-1 rounded-xl bg-[#16171b] px-3.5 py-1.5 text-xs font-medium text-[#d8dbe4] hover:bg-[#202127] hover:text-white transition-colors border border-[#282a32]"
           >
             Inspect
           </button>
           <Link
             href={`/claims/${claim.id}`}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#8052ff] hover:bg-[#966eff] px-3 py-1.5 text-xs font-semibold text-white transition-colors shadow-sm shadow-[#8052ff]/20"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-[#e5e7eb] px-3.5 py-1.5 text-xs font-semibold text-black transition-colors shadow-sm"
           >
             <span>Workstation</span>
             <ArrowRightIcon className="h-3.5 w-3.5" />

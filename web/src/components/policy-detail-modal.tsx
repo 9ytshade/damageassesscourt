@@ -8,8 +8,6 @@ import {
   ShieldIcon,
   FileTextIcon,
   CheckCircleIcon,
-  ExternalLinkIcon,
-  ArrowRightIcon,
 } from "@/components/icons";
 
 interface PolicyDetailModalProps {
@@ -26,107 +24,100 @@ export function PolicyDetailModal({ policy, onClose, onFileClaim }: PolicyDetail
       role="dialog"
       aria-modal="true"
       aria-labelledby="policy-detail-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl rounded-2xl border border-[#23252a] bg-[#0c0d0e] p-6 sm:p-8 shadow-2xl relative my-8 text-left"
+        className="w-full max-w-3xl rounded-3xl border border-[#242630] bg-[#0d0e12] p-7 sm:p-10 shadow-2xl relative my-8 text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 text-[#8a8f98] hover:text-white text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#1a1b1e] transition-colors"
+          className="absolute right-6 top-6 text-[#9ea3b2] hover:text-white text-2xl font-bold w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#1a1c22] transition-colors"
           aria-label="Close modal"
         >
           &times;
         </button>
 
         {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pr-8">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-[#ffb829] bg-[#ffb829]/10 px-2.5 py-1 rounded border border-[#ffb829]/30">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-5 pr-10">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-xs font-bold text-white bg-[#18191e] px-3 py-1.5 rounded-lg border border-[#2d2f38]">
               RISK POOL #{policy.id}
             </span>
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                policy.is_active
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                  : "bg-slate-800 text-slate-400 border border-slate-700"
+              className={`badge-status ${
+                policy.is_active ? "badge-approved" : "badge-exhausted"
               }`}
             >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${
-                  policy.is_active ? "bg-emerald-400 animate-pulse" : "bg-slate-500"
-                }`}
-              />
               {policy.is_active ? "Active Underwriting" : "Archived"}
             </span>
           </div>
         </div>
 
         {/* Title & Description */}
-        <h2 id="policy-detail-title" className="text-2xl font-bold text-white tracking-tight">
+        <h2 id="policy-detail-title" className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
           {policy.title}
         </h2>
-        <p className="mt-2 text-sm text-[#8a8f98] leading-relaxed">
+        <p className="mt-2.5 text-sm sm:text-base text-[#9ea3b2] leading-relaxed">
           {policy.description}
         </p>
 
         {/* Financial Metrics Grid */}
-        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div className="rounded-xl bg-[#141518] p-3 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-mono tracking-wider">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="rounded-2xl bg-[#141519] p-4 border border-[#242630]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
               Total Escrow Capital
             </span>
-            <span className="font-mono text-sm font-bold text-emerald-400 mt-1 block">
+            <span className="font-mono text-base font-bold text-emerald-400 mt-1 block">
               {formatWei(policy.total_escrow_pool)} GEN
             </span>
           </div>
 
-          <div className="rounded-xl bg-[#141518] p-3 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-mono tracking-wider">
+          <div className="rounded-2xl bg-[#141519] p-4 border border-[#242630]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
               Max Payout Cap
             </span>
-            <span className="font-mono text-sm font-bold text-white mt-1 block">
+            <span className="font-mono text-base font-bold text-white mt-1 block">
               {formatWei(policy.max_claim_cap)} GEN
             </span>
           </div>
 
-          <div className="rounded-xl bg-[#141518] p-3 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-mono tracking-wider">
+          <div className="rounded-2xl bg-[#141519] p-4 border border-[#242630]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
               Min Claimant Stake
             </span>
-            <span className="font-mono text-sm font-bold text-slate-200 mt-1 block">
+            <span className="font-mono text-base font-bold text-[#d8dbe4] mt-1 block">
               {formatWei(policy.min_claimant_stake)} GEN
             </span>
           </div>
 
-          <div className="rounded-xl bg-[#141518] p-3 border border-[#23252a]">
-            <span className="text-[10px] text-[#8a8f98] block uppercase font-mono tracking-wider">
+          <div className="rounded-2xl bg-[#141519] p-4 border border-[#242630]">
+            <span className="text-xs text-[#8a8f9c] block uppercase font-mono tracking-wider">
               Deductible BPS
             </span>
-            <span className="font-mono text-sm font-bold text-[#ffb829] mt-1 block">
+            <span className="font-mono text-base font-bold text-white mt-1 block">
               {policy.deductible_bps ? `${policy.deductible_bps} bps` : "500 bps (5%)"}
             </span>
           </div>
         </div>
 
         {/* Covered Perils Checklist */}
-        <div className="mt-5 space-y-2">
-          <h3 className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#8a8f98]">
-            Covered Perils & Triggers
+        <div className="mt-6 space-y-2.5">
+          <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-[#9ea3b2]">
+            Covered Perils &amp; Triggers
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {(policy.covered_perils && policy.covered_perils.length > 0
               ? policy.covered_perils
               : ["Hurricane & Windstorm", "Hail & Roof Penetration", "Water Pipe Burst", "Flash Flood Surge"]
             ).map((peril, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#141518] px-3 py-1.5 text-xs text-[#d0d6e0] border border-[#23252a]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#141519] px-3.5 py-2 text-xs font-medium text-[#d8dbe4] border border-[#242630]"
               >
-                <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-400" />
+                <CheckCircleIcon className="h-4 w-4 text-emerald-400" />
                 {peril}
               </span>
             ))}
@@ -134,16 +125,16 @@ export function PolicyDetailModal({ policy, onClose, onFileClaim }: PolicyDetail
         </div>
 
         {/* Verbatim Policy Terms & Exclusions */}
-        <div className="mt-5 space-y-2">
+        <div className="mt-6 space-y-2.5">
           <div className="flex items-center justify-between">
-            <h3 className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#ffb829] flex items-center gap-1.5">
-              <FileTextIcon className="h-3.5 w-3.5" />
-              Verbatim Policy Terms & Exclusion Clauses
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-white flex items-center gap-2">
+              <FileTextIcon className="h-4 w-4 text-[#9ea3b2]" />
+              Verbatim Policy Terms &amp; Exclusion Clauses
             </h3>
-            <span className="text-[10px] text-[#8a8f98] font-mono">Governing Legal Text</span>
+            <span className="text-xs text-[#8a8f9c] font-mono">Governing Legal Text</span>
           </div>
-          <div className="rounded-xl bg-[#08090a] p-4 border border-[#23252a] font-mono text-xs text-[#d0d6e0] leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap selection:bg-[#ffb829]/30">
-            {policy.policy_terms_text ||
+          <div className="rounded-2xl bg-[#08090b] p-5 border border-[#242630] font-mono text-xs text-[#d8dbe4] leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap">
+            {policy.policy_terms_text || policy.policy_terms ||
               `SECTION 1. INDEMNITY COVERAGE
 This decentralized insurance pool indemnifies the claimant against direct physical loss caused by specified perils during the active policy epoch.
 
@@ -162,37 +153,37 @@ GenLayer AI consensus acts as the magistrate jury. All damage percentages (0-10,
         </div>
 
         {/* Underwriter Metadata */}
-        <div className="mt-5 rounded-xl bg-[#141518] p-3 border border-[#23252a] text-xs text-[#8a8f98] flex flex-wrap items-center justify-between gap-2">
+        <div className="mt-6 rounded-2xl bg-[#141519] p-4 border border-[#242630] text-xs text-[#8a8f9c] flex flex-wrap items-center justify-between gap-3">
           <div>
-            <span className="block text-[10px] uppercase font-mono">Underwriter Address:</span>
-            <span className="font-mono text-slate-200">{formatAddress(policy.underwriter)}</span>
+            <span className="block text-xs uppercase font-mono text-[#8a8f9c]">Underwriter Address:</span>
+            <span className="font-mono text-[#d8dbe4] mt-0.5 block">{formatAddress(policy.underwriter)}</span>
           </div>
           <div>
-            <span className="block text-[10px] uppercase font-mono">Claims Activity:</span>
-            <span className="font-mono text-white">
+            <span className="block text-xs uppercase font-mono text-[#8a8f9c]">Claims Activity:</span>
+            <span className="font-mono text-white mt-0.5 block">
               {policy.active_claims_count} Active / {policy.settled_claims_count} Settled
             </span>
           </div>
         </div>
 
         {/* Actions Footer */}
-        <div className="mt-6 pt-4 border-t border-[#23252a] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mt-8 pt-5 border-t border-[#22242c] flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#23252a] text-xs font-semibold text-[#d0d6e0] hover:bg-[#1a1b1e] hover:text-white transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-full border border-[#282a32] text-sm font-semibold text-[#d8dbe4] hover:bg-[#1a1c22] hover:text-white transition-colors"
           >
             Close
           </button>
 
           {policy.is_active && (
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               {onFileClaim ? (
                 <button
                   onClick={() => {
                     onClose();
                     onFileClaim(policy);
                   }}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#ffb829] hover:bg-[#e5a420] text-black text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-[#ffb829]/25"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-white hover:bg-[#e5e7eb] text-black text-sm font-bold uppercase tracking-wider transition-all shadow-md"
                 >
                   <ShieldIcon className="h-4 w-4" />
                   <span>File Damage Claim</span>
@@ -201,7 +192,7 @@ GenLayer AI consensus acts as the magistrate jury. All damage percentages (0-10,
                 <Link
                   href={`/claims/submit?policyId=${policy.id}`}
                   onClick={onClose}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#ffb829] hover:bg-[#e5a420] text-black text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-[#ffb829]/25"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-white hover:bg-[#e5e7eb] text-black text-sm font-bold uppercase tracking-wider transition-all shadow-md"
                 >
                   <ShieldIcon className="h-4 w-4" />
                   <span>File Damage Claim</span>

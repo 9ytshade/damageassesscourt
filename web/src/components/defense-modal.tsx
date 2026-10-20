@@ -101,11 +101,11 @@ export function DefenseModal({ claim, isOpen, onClose, onSuccess }: DefenseModal
     txStatus.step === "ACCEPTED";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-xl rounded-2xl border border-sky-500/30 bg-court-midnight p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-2 text-sky-400">
-            <ShieldCheckIcon className="h-6 w-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-xl rounded-3xl border border-[#2d2f38] bg-[#14151a] p-6 sm:p-7 shadow-2xl">
+        <div className="flex items-center justify-between pb-4 border-b border-[#22242c]">
+          <div className="flex items-center gap-2.5 text-white">
+            <ShieldCheckIcon className="h-5 w-5 text-white" />
             <h3 className="text-lg font-bold text-white font-mono">
               Submit Defense Rebuttal for Claim #{claim.id}
             </h3>
@@ -114,27 +114,27 @@ export function DefenseModal({ claim, isOpen, onClose, onSuccess }: DefenseModal
             type="button"
             onClick={onClose}
             disabled={isWorking}
-            className="text-slate-400 hover:text-white transition-colors disabled:opacity-50"
+            className="text-[#9ea3b2] hover:text-white transition-colors disabled:opacity-50"
           >
             <CloseIcon className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleDefense} className="mt-4 space-y-4">
+        <form onSubmit={handleDefense} className="mt-5 space-y-4">
           {claim.contest_reason && (
-            <div className="rounded-lg bg-amber-950/20 border border-court-amber/30 p-3 text-xs">
-              <span className="font-mono text-amber-400 uppercase tracking-wide block font-semibold mb-1">
+            <div className="rounded-xl bg-[#0d0e12] border border-[#22242c] p-3.5 text-xs">
+              <span className="font-mono text-white uppercase tracking-wide block font-semibold mb-1">
                 Underwriter Contest Grievance:
               </span>
-              <p className="text-slate-300 italic">
+              <p className="text-[#d8dbe4] italic leading-relaxed">
                 &ldquo;{claim.contest_reason}&rdquo;
               </p>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">
-              Claimant Evidence & Defense Rebuttal
+            <label className="block text-xs font-mono uppercase tracking-wider text-[#d8dbe4] mb-1.5 font-semibold">
+              Claimant Evidence &amp; Defense Rebuttal
             </label>
             <textarea
               rows={4}
@@ -142,34 +142,34 @@ export function DefenseModal({ claim, isOpen, onClose, onSuccess }: DefenseModal
               onChange={(e) => setRebuttal(e.target.value)}
               placeholder="Cite line items, weather timestamps, contractor certification, or maintenance records refuting the grievance..."
               disabled={isWorking}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900/90 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-sky-400 focus:outline-none disabled:opacity-50"
+              className="w-full rounded-xl border border-[#2d2f38] bg-[#0d0e12] px-3.5 py-2.5 text-sm text-[#f0f2f5] placeholder-[#6f7384] focus:border-white focus:outline-none disabled:opacity-50 transition-colors"
             />
-            <div className="flex justify-between items-center text-[11px] text-slate-400 mt-1">
+            <div className="flex justify-between items-center text-[11px] font-mono text-[#8a8f9d] mt-1.5">
               <span>Minimum 20 characters required.</span>
               <span>{rebuttal.length}/3,000</span>
             </div>
           </div>
 
-          <label className="flex items-start gap-2 cursor-pointer bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 transition-colors">
+          <label className="flex items-start gap-2.5 cursor-pointer bg-[#0d0e12] p-3 rounded-xl border border-[#22242c] hover:border-[#2d2f38] transition-colors">
             <input
               type="checkbox"
               checked={waiveTime}
               onChange={(e) => setWaiveTime(e.target.checked)}
               disabled={isWorking}
-              className="mt-0.5 rounded border-slate-700 text-sky-500 focus:ring-sky-400 bg-slate-800"
+              className="mt-0.5 rounded border-[#2d2f38] text-white focus:ring-white bg-[#14151a]"
             />
             <div className="text-xs">
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-white">
                 Waive remaining defense window
               </span>
-              <p className="text-slate-400 text-[11px] mt-0.5">
+              <p className="text-[#8a8f9d] text-[11px] mt-0.5">
                 Immediately closes the defense countdown, allowing any party or validator to trigger the AI Magistrate consensus trial.
               </p>
             </div>
           </label>
 
           {validationError && (
-            <div className="rounded-lg border border-red-500/30 bg-red-950/30 p-2.5 text-xs text-red-300">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-950/30 p-3 text-xs text-rose-300">
               {validationError}
             </div>
           )}
@@ -181,14 +181,14 @@ export function DefenseModal({ claim, isOpen, onClose, onSuccess }: DefenseModal
               type="button"
               onClick={onClose}
               disabled={isWorking}
-              className="px-4 py-2 rounded-lg border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-full border border-[#2d2f38] text-xs font-semibold text-[#d8dbe4] hover:bg-[#1f212a] hover:text-white transition-colors disabled:opacity-50 font-mono uppercase"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isWorking || rebuttal.trim().length < 20}
-              className="px-5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 text-sm font-bold shadow-lg shadow-sky-950/30 transition-all disabled:opacity-50 font-mono"
+              className="px-5 py-2.5 rounded-full bg-white hover:bg-[#e4e7ee] text-black text-xs font-bold shadow-lg transition-all disabled:opacity-50 font-mono uppercase tracking-wider"
             >
               {isWorking ? "Submitting..." : "Submit Defense Rebuttal"}
             </button>

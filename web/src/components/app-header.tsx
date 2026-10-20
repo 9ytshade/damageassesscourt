@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GavelIcon } from "@/components/icons";
@@ -11,6 +11,7 @@ import { STUDIONET_CHAIN_ID } from "@/lib/genlayer";
 export function AppHeader() {
   const pathname = usePathname();
   const { wrongNetwork } = useWallet();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "/claims", label: "Docket" },
@@ -21,48 +22,48 @@ export function AppHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#23252a] bg-[#000000]/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand & Logo */}
-        <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-40 w-full border-b border-[#22242c] bg-[#000000]/90 backdrop-blur-md">
+      <div className="mx-auto flex h-20 max-w-[1536px] items-center justify-between px-5 sm:px-8 lg:px-12">
+        {/* Brand & Logo on Left */}
+        <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ffb829] shadow-sm shadow-[#ffb829]/20 group-hover:scale-105 transition-transform">
-              <GavelIcon className="h-5 w-5 text-black" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#18191e] border border-[#2e303a] shadow-sm group-hover:scale-105 transition-transform">
+              <GavelIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="text-base font-bold tracking-tight text-white group-hover:text-[#ffb829] transition-colors">
+            <span className="text-lg font-bold tracking-tight text-white group-hover:text-[#d8dbe4] transition-colors">
               DamageAssessCourt
             </span>
           </Link>
-
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 pl-2">
-            {navLinks.map((link) => {
-              const active =
-                pathname === link.href ||
-                (link.href === "/claims" && pathname.startsWith("/claims") && !pathname.includes("/submit")) ||
-                (link.href === "/policies" && pathname.startsWith("/policies") && !pathname.includes("/create"));
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                    active
-                      ? "bg-[#141518] text-[#ffb829] border border-[#23252a]"
-                      : "text-[#8a8f98] hover:text-white hover:bg-[#141518]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
         </div>
 
-        {/* Right side: Chain status and Wallet connect */}
+        {/* Navigation Links Centered */}
+        <nav className="hidden md:flex flex-1 items-center justify-center gap-2 px-6">
+          {navLinks.map((link) => {
+            const active =
+              pathname === link.href ||
+              (link.href === "/claims" && pathname.startsWith("/claims") && !pathname.includes("/submit")) ||
+              (link.href === "/policies" && pathname.startsWith("/policies") && !pathname.includes("/create"));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                  active
+                    ? "bg-[#18191e] text-white border border-[#2e313c] shadow-sm font-semibold"
+                    : "text-[#9ea3b2] hover:text-white hover:bg-[#141519]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right side: Chain status, Wallet connect & Mobile menu toggle */}
         <div className="flex items-center gap-3">
-          {/* Chain Status: Studionet over 61999 (No Faucet) */}
-          <div className="hidden sm:flex flex-col items-end text-right px-3 py-1 rounded-lg border border-[#23252a] bg-[#0c0d0e]">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#d0d6e0]">
+          {/* Chain Status: Studionet over 61999 */}
+          <div className="hidden sm:flex flex-col items-end text-right px-3.5 py-1.5 rounded-xl border border-[#242630] bg-[#101115]">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#d8dbe4]">
               <span
                 className={`h-1.5 w-1.5 rounded-full ${
                   wrongNetwork ? "bg-rose-500 animate-pulse" : "bg-emerald-400"
@@ -70,15 +71,69 @@ export function AppHeader() {
               />
               <span>{wrongNetwork ? "Wrong Network" : "Studionet"}</span>
             </div>
-            <span className="text-[10px] font-mono text-[#8a8f98] leading-none mt-0.5">
+            <span className="text-[11px] font-mono text-[#8a8f9c] leading-none mt-0.5">
               {STUDIONET_CHAIN_ID}
             </span>
           </div>
 
-          {/* Wallet Connect Popover */}
-          <WalletConnect />
+          {/* Wallet Connect Button / Popover */}
+          <div className="hidden sm:block">
+            <WalletConnect />
+          </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-[#282a33] bg-[#121317] text-[#c4c7d4] hover:text-white hover:bg-[#1a1c22] transition-colors"
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? (
+              <span className="text-xl font-bold leading-none">&times;</span>
+            ) : (
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-[#22242c] bg-[#0c0d10] px-5 py-6 space-y-4 animate-fade-in text-left">
+          <nav className="flex flex-col space-y-1">
+            {navLinks.map((link) => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                    active
+                      ? "bg-[#18191e] text-white border border-[#2e313c] font-semibold"
+                      : "text-[#9ea3b2] hover:text-white hover:bg-[#141519]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="pt-4 border-t border-[#22242c] flex flex-col gap-3">
+            <div className="flex items-center justify-between text-xs font-mono px-2 py-1 text-[#9ea3b2]">
+              <span>Network:</span>
+              <span className="text-emerald-400 font-semibold">Studionet ({STUDIONET_CHAIN_ID})</span>
+            </div>
+            <div className="w-full">
+              <WalletConnect />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

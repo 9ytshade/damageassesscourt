@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Claim } from "@/types/damageassesscourt";
-import { formatAddress, formatWei, formatTimestamp } from "@/lib/safety";
+import { formatWei, formatTimestamp } from "@/lib/safety";
 import {
   ExternalLinkIcon,
   ArrowRightIcon,

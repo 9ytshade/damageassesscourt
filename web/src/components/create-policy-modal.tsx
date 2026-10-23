@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useWallet } from "@/lib/use-wallet";
 import { DAMAGEASSESSCOURT_CONTRACT_ADDRESS, pollTransactionUntilFinalized } from "@/lib/genlayer";
-import { ShieldIcon, XCircleIcon, CheckCircleIcon } from "@/components/icons";
+import { ShieldIcon } from "@/components/icons";
 
 interface CreatePolicyModalProps {
   isOpen?: boolean;
@@ -12,7 +12,7 @@ interface CreatePolicyModalProps {
 }
 
 export function CreatePolicyModal({ isOpen, onClose, onSuccess }: CreatePolicyModalProps) {
-  const { account, isConnected, wrongNetwork, switchNetwork, getSignerClient } = useWallet();
+  const { isConnected, wrongNetwork, switchNetwork, getSignerClient } = useWallet();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

@@ -5,7 +5,7 @@ import { PolicyPool } from "@/types/damageassesscourt";
 import { useWallet } from "@/lib/use-wallet";
 import { DAMAGEASSESSCOURT_CONTRACT_ADDRESS, pollTransactionUntilFinalized } from "@/lib/genlayer";
 import { validateEvidenceUrl, formatWei } from "@/lib/safety";
-import { GavelIcon, WrenchIcon, CloudStormIcon, AlertCircleIcon } from "@/components/icons";
+import { GavelIcon, WrenchIcon, CloudStormIcon } from "@/components/icons";
 
 interface FileClaimModalProps {
   policy: PolicyPool;
@@ -15,7 +15,7 @@ interface FileClaimModalProps {
 }
 
 export function FileClaimModal({ policy, isOpen, onClose, onSuccess }: FileClaimModalProps) {
-  const { account, isConnected, wrongNetwork, switchNetwork, getSignerClient } = useWallet();
+  const { isConnected, wrongNetwork, switchNetwork, getSignerClient } = useWallet();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

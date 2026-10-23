@@ -15,16 +15,14 @@ import {
   GavelIcon,
   ShieldCheckIcon,
   SparklesIcon,
-  BuildingOfficeIcon,
   PlusIcon,
   ArrowRightIcon,
 } from "@/components/icons";
 
 export default function DashboardPage() {
   const [policies, setPolicies] = useState<PolicyPool[]>([]);
-  const [claims, setClaims] = useState<Claim[]>(DEMO_CLAIMS);
+  const [claims] = useState<Claim[]>(DEMO_CLAIMS);
   const [totals, setTotals] = useState({ policyCount: 0, claimCount: 0, verdictCount: 0 });
-  const [loading, setLoading] = useState(true);
   const [isFallback, setIsFallback] = useState(false);
 
   // Modals state
@@ -37,7 +35,6 @@ export default function DashboardPage() {
   const [claimFilter, setClaimFilter] = useState<string>("all");
 
   async function loadData() {
-    setLoading(true);
     try {
       const [policiesRes, totalsRes] = await Promise.all([
         fetchAllPolicies(0, 10),
@@ -48,13 +45,12 @@ export default function DashboardPage() {
       setTotals(totalsRes);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
-    } finally {
-      setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadData();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadData();
   }, []);
 
   function handleOpenFileClaim(policy: PolicyPool) {

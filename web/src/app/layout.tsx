@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#000000] text-slate-100 antialiased flex flex-col font-sans selection:bg-[#ffb829]/30 selection:text-[#ffb829]">
+      <body className="min-h-screen bg-[#000000] text-slate-100 antialiased flex flex-col font-sans selection:bg-white/20 selection:text-white">
         <WalletProvider>
           <AppHeader />
           <main className="flex-1 w-full">

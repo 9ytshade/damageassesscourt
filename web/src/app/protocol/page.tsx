@@ -28,35 +28,39 @@ export default function ProtocolPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#000000] text-slate-100">
-      <div className="relative mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12 pb-20">
-        {/* Guide Header */}
-        <header className="grid gap-10 border-b border-[#22242c] py-14 md:grid-cols-12 md:py-20">
-          <div className="md:col-span-8">
-            <p className="font-mono mb-4 text-xs uppercase tracking-widest text-[#8a8f9c]">
-              DAMAGEASSESSCOURT / PROTOCOL SPECIFICATION
-            </p>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[1.02] tracking-tight text-white">
-              A decentralized path from physical damage to verified indemnity.
-            </h1>
-            <p className="mt-6 max-w-3xl text-base sm:text-xl leading-relaxed text-[#9ea3b2]">
-              The rules behind DamageAssessCourt&apos;s autonomous property insurance: how escrow is pooled,
-              what evidence claimants submit, how GenLayer validators cross-examine ambiguous terms, and how
-              continuous basis-point settlements execute on-chain.
-            </p>
+    <div className="w-full pb-20 space-y-12 animate-fade-in bg-[#000000] text-slate-100">
+      {/* Full-Width Guide Header matching Landing Page */}
+      <section className="relative w-full border-b border-[#22242c] bg-[#000000] py-14 lg:py-20">
+        <div className="mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-10 md:grid-cols-12 md:items-end">
+            <div className="md:col-span-8 space-y-4">
+              <p className="font-mono text-xs uppercase tracking-widest text-[#8a8f9c]">
+                DAMAGEASSESSCOURT / PROTOCOL SPECIFICATION
+              </p>
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[1.02] tracking-tight text-white">
+                A decentralized path from physical damage to verified indemnity.
+              </h1>
+              <p className="text-base sm:text-xl leading-relaxed text-[#9ea3b2]">
+                The rules behind DamageAssessCourt&apos;s autonomous property insurance: how escrow is pooled,
+                what evidence claimants submit, how GenLayer validators cross-examine ambiguous terms, and how
+                continuous basis-point settlements execute on-chain.
+              </p>
+            </div>
+            <aside className="self-end border-l border-[#22242c] pl-6 md:col-span-4 space-y-2">
+              <p className="font-mono text-xs uppercase tracking-widest text-[#8a8f9c]">
+                THE SHORT VERSION
+              </p>
+              <p className="text-xl font-medium leading-snug text-[#d8dbe4]">
+                A funded risk pool. Multi-source evidence. AI magistrate jury consensus. Continuous basis-points settlement.
+              </p>
+            </aside>
           </div>
-          <aside className="self-end border-l border-[#22242c] pl-6 md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#8a8f9c]">
-              THE SHORT VERSION
-            </p>
-            <p className="mt-3 text-xl font-medium leading-snug text-[#d8dbe4]">
-              A funded risk pool. Multi-source evidence. AI magistrate jury consensus. Continuous basis-points settlement.
-            </p>
-          </aside>
-        </header>
+        </div>
+      </section>
 
-        {/* 12-Column Guide Layout */}
-        <div className="grid gap-12 py-12 md:grid-cols-12 md:gap-16">
+      {/* 12-Column Guide Layout */}
+      <div className="mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12">
+        <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           {/* Sticky In-Guide Sidebar */}
           <aside className="md:col-span-3">
             <div className="sticky top-28 space-y-4">
@@ -82,7 +86,7 @@ export default function ProtocolPage() {
             {/* 01: The Model */}
             <section id="model" className="scroll-mt-28 space-y-6">
               <SectionHeading number="01" title="The model" />
-              <p className="max-w-3xl text-base sm:text-lg leading-relaxed text-[#9ea3b2]">
+              <p className="text-base sm:text-lg leading-relaxed text-[#9ea3b2]">
                 DamageAssessCourt is an autonomous property damage court and indemnity protocol. Underwriters lock capital into an escrow pool backed by explicit policy terms. Claimants file structured damage reports containing photo URLs, Doppler radar records, and dispatch numbers. GenLayer validators act as an impartial magistrate jury, parsing untrusted evidence against legal clauses to formulate continuous graduated payouts.
               </p>
               <div className="grid gap-px overflow-hidden rounded-2xl border border-[#22242c] bg-[#22242c] sm:grid-cols-3">
@@ -120,78 +124,48 @@ export default function ProtocolPage() {
                 />
                 <LifecycleStep
                   number="03"
-                  title="AI magistrate adjudication"
-                  text="Eligible caller triggers intelligent contract adjudication. Validators fetch documents, inspect physical images, verify weather coordinates, and output a consensus Basis Points rating (0 to 10,000 bps)."
+                  title="Underwriter review window"
+                  text="Underwriter can fast-path approve (100% indemnity release) or file a contest grievance with matching dispute deposit within the countdown window."
                 />
                 <LifecycleStep
                   number="04"
-                  title="Contest window and defense"
-                  text="Before final payout, an interested party may post a dispute bond to challenge the preliminary verdict. The claimant may file a formal defense rebuttal with additional proof."
+                  title="Claimant defense rebuttal"
+                  text="If contested, claimant has a dedicated defense window to upload rebuttal documents or waive the timer for immediate trial."
                 />
                 <LifecycleStep
                   number="05"
-                  title="Final settlement or slashing"
-                  text="Upon consensus resolution, approved payouts are disbursed immediately to the claimant with their stake refunded. If deemed fraudulent, the claimant stake is slashed to the pool."
+                  title="AI magistrate consensus trial"
+                  text="Validators independently fetch untrusted evidence URLs, run prompt analysis on policy wording vs. damage severity, and agree on continuous settlement BPS."
+                />
+                <LifecycleStep
+                  number="06"
+                  title="Continuous settlement disbarment"
+                  text="Exact value conservation executes: indemnity payout is transferred to claimant, unencumbered balance returns to pool, and stakes are refunded or slashed."
                 />
               </ol>
-
-              <div className="grid gap-5 sm:grid-cols-2 pt-2">
-                <div className="rounded-2xl border border-[#22242c] bg-[#0c0d10] p-6">
-                  <p className="font-mono text-xs uppercase tracking-wider text-white font-bold">
-                    FRAUD SLASHING GUARD
-                  </p>
-                  <p className="mt-2.5 text-sm leading-relaxed text-[#9ea3b2]">
-                    Filings presenting fabricated images, pre-existing rust as acute storm breach, or forged dispatch reports trigger a fraud verdict. The claimant stake is permanently slashed and absorbed into the pool.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-[#22242c] bg-[#0c0d10] p-6">
-                  <p className="font-mono text-xs uppercase tracking-wider text-emerald-400 font-bold">
-                    EXCESS CAPITAL PRESERVATION
-                  </p>
-                  <p className="mt-2.5 text-sm leading-relaxed text-[#9ea3b2]">
-                    When claims settle for partial loss (e.g. 6,850 basis points), the unspent portion of the maximum cap remains fully preserved in the escrow pool to support future valid claims.
-                  </p>
-                </div>
-              </div>
             </section>
 
-            {/* 03: Basis Points Engine */}
+            {/* 03: Basis Points Engine & Interactive Visualizer */}
             <section id="bps-engine" className="scroll-mt-28 space-y-6">
-              <SectionHeading number="03" title="Basis points engine" />
-              <div className="grid gap-6 md:grid-cols-12">
-                <p className="text-base sm:text-lg leading-relaxed text-[#9ea3b2] md:col-span-7">
-                  Traditional parametric insurance relies on crude binary switches: either pay 100% or pay 0%. DamageAssessCourt implements continuous proportional indemnity math: validators calibrate damage severity across 10,000 Basis Points (0.01% increments). This accounts for real-world nuances like pre-existing wear, partially salvable inventory, and proportionate deductible deductions.
-                </p>
-                <aside className="border-l-2 border-[#424554] pl-5 md:col-span-5">
-                  <p className="font-mono text-xs uppercase tracking-wider text-white font-semibold">
-                    CONTINUOUS INDEMNITY FORMULA
-                  </p>
-                  <p className="mt-2 font-mono text-xs text-[#d8dbe4] leading-relaxed">
-                    Payout = min(Claimed, Cap) * max(0, BPS - DeductibleBPS) / 10000
-                  </p>
-                </aside>
-              </div>
+              <SectionHeading number="03" title="Basis points indemnity engine" />
+              <p className="text-base sm:text-lg leading-relaxed text-[#9ea3b2]">
+                Unlike conventional smart contracts that force a simplistic all-or-nothing binary outcome (100% payout or 0% denial), DamageAssessCourt implements continuous proportional indemnity from 0 to 10,000 Basis Points (BPS).
+              </p>
 
               {/* Interactive BPS Simulator */}
               <div className="rounded-2xl border border-[#22242c] bg-[#0c0d10] p-6 sm:p-8 space-y-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#22242c] pb-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-white font-mono">
-                      Interactive Basis Points Math Simulator
-                    </h3>
-                    <p className="text-sm text-[#9ea3b2] mt-0.5">
-                      Test exact integer arithmetic and value conservation across the 10,000 BPS spectrum.
-                    </p>
-                  </div>
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full bg-[#18191e] text-white border border-[#2e313c]">
-                    0.01% Resolution
-                  </span>
+                <div>
+                  <h3 className="text-lg font-bold text-white font-mono flex items-center gap-2">
+                    <span>Interactive Settlement Calculator</span>
+                  </h3>
+                  <p className="text-xs text-[#8a8f9c] mt-1">
+                    Simulate how GenLayer validators determine exact gross indemnity, deductibles, and stake refund or slashing.
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-sm font-mono">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <div>
-                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5">
+                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5 font-mono">
                       Claimed Amount (GEN)
                     </label>
                     <input
@@ -203,7 +177,7 @@ export default function ProtocolPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5">
+                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5 font-mono">
                       Settlement BPS: {calcBps} ({(calcBps / 100).toFixed(2)}%)
                     </label>
                     <input
@@ -218,7 +192,7 @@ export default function ProtocolPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5">
+                    <label className="block text-[#8a8f9c] uppercase text-xs mb-1.5 font-mono">
                       Claimant Anti-Spam Stake (GEN)
                     </label>
                     <input
@@ -388,7 +362,7 @@ export default function ProtocolPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -14,6 +14,7 @@ export function AppHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
+    { href: "/", label: "Home" },
     { href: "/claims", label: "Docket" },
     { href: "/policies", label: "Risk Pools" },
     { href: "/policies/create", label: "Underwrite" },
@@ -40,9 +41,11 @@ export function AppHeader() {
         <nav className="hidden md:flex flex-1 items-center justify-center gap-2 px-6">
           {navLinks.map((link) => {
             const active =
-              pathname === link.href ||
-              (link.href === "/claims" && pathname.startsWith("/claims") && !pathname.includes("/submit")) ||
-              (link.href === "/policies" && pathname.startsWith("/policies") && !pathname.includes("/create"));
+              link.href === "/"
+                ? pathname === "/"
+                : pathname === link.href ||
+                  (link.href === "/claims" && pathname.startsWith("/claims") && !pathname.includes("/submit")) ||
+                  (link.href === "/policies" && pathname.startsWith("/policies") && !pathname.includes("/create"));
             return (
               <Link
                 key={link.href}
@@ -100,18 +103,23 @@ export function AppHeader() {
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Slide-Down Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#22242c] bg-[#0c0d10] px-5 py-6 space-y-4 animate-fade-in text-left">
-          <nav className="flex flex-col space-y-1">
+        <div className="md:hidden border-t border-[#22242c] bg-[#0c0d10] px-5 py-6 space-y-4 animate-fade-in">
+          <nav className="flex flex-col space-y-2">
             {navLinks.map((link) => {
-              const active = pathname === link.href;
+              const active =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname === link.href ||
+                    (link.href === "/claims" && pathname.startsWith("/claims") && !pathname.includes("/submit")) ||
+                    (link.href === "/policies" && pathname.startsWith("/policies") && !pathname.includes("/create"));
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                  className={`rounded-xl px-4 py-3 text-sm font-medium transition-all ${
                     active
                       ? "bg-[#18191e] text-white border border-[#2e313c] font-semibold"
                       : "text-[#9ea3b2] hover:text-white hover:bg-[#141519]"
@@ -124,13 +132,11 @@ export function AppHeader() {
           </nav>
 
           <div className="pt-4 border-t border-[#22242c] flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-mono px-2 py-1 text-[#9ea3b2]">
-              <span>Network:</span>
-              <span className="text-emerald-400 font-semibold">Studionet ({STUDIONET_CHAIN_ID})</span>
+            <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#141519] border border-[#242630] text-xs font-mono">
+              <span className="text-[#8a8f9c]">Chain Network:</span>
+              <span className="text-white font-semibold">Studionet ({STUDIONET_CHAIN_ID})</span>
             </div>
-            <div className="w-full">
-              <WalletConnect />
-            </div>
+            <WalletConnect />
           </div>
         </div>
       )}

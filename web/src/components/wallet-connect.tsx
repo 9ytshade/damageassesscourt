@@ -2,8 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useWallet } from "@/lib/use-wallet";
-import { STUDIONET_CHAIN_ID } from "@/lib/genlayer";
-import { WalletIcon, ExternalLinkIcon, CheckCircleIcon } from "@/components/icons";
+import { WalletIcon } from "@/components/icons";
 
 export function WalletConnect() {
   const {

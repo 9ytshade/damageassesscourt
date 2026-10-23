@@ -98,15 +98,18 @@ export default function CreatePolicyPage() {
         capWei,
         stakeWei,
         dedBps,
-        (status) => {
-          if (status === "signing") setTxState("signing");
-          if (status === "broadcasting") setTxState("broadcasting");
-          if (status === "waiting") setTxState("waiting");
+        (status, hash) => {
+          if (status === "broadcasting") {
+            setTxState("broadcasting");
+            if (hash) setTxHash(hash);
+          } else if (status === "waiting") {
+            setTxState("waiting");
+          }
         }
       );
 
       if (res.success) {
-        setTxHash(res.txHash);
+        if (res.txHash) setTxHash(res.txHash);
         setTxState("confirmed");
       } else {
         setTxError(res.error || "Failed to create policy pool.");
@@ -121,255 +124,275 @@ export default function CreatePolicyPage() {
   };
 
   return (
-    <div className="mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12 py-10 space-y-10">
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-2 text-sm font-mono text-[#8a8f9c]">
-        <Link href="/policies" className="hover:text-white transition-colors">
-          &larr; Risk Pools Directory
-        </Link>
-        <span>/</span>
-        <span className="text-white">Underwrite Escrow Facility</span>
-      </div>
+    <div className="w-full pb-20 space-y-10 animate-fade-in">
+      {/* Full-Width Top Header Banner matching Landing Page */}
+      <section className="relative w-full border-b border-[#22242c] bg-[#000000] py-12 lg:py-16">
+        <div className="mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12 space-y-4">
+          <div className="flex items-center gap-2 text-sm font-mono text-[#8a8f9c]">
+            <Link href="/policies" className="hover:text-white transition-colors">
+              &larr; Risk Pools Directory
+            </Link>
+            <span>/</span>
+            <span className="text-white">Underwrite Escrow Facility</span>
+          </div>
 
-      {/* Header */}
-      <div className="border-b border-[#22242c] pb-8">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#2a2d36] bg-[#121317] px-4 py-1.5 text-xs font-mono text-[#d8dbe4] mb-3">
-          <ShieldCheckIcon className="h-4 w-4 text-[#a4a8b7]" />
-          <span>CAPITAL UNDERWRITING FACILITY</span>
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#2a2d36] bg-[#121317] px-4 py-1.5 text-xs font-mono text-[#d8dbe4]">
+              <ShieldCheckIcon className="h-4 w-4 text-[#a4a8b7]" />
+              <span>CAPITAL UNDERWRITING FACILITY</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white font-mono">
+              Underwrite Policy Escrow Pool
+            </h1>
+            <p className="text-base sm:text-lg text-[#9ea3b2] leading-relaxed max-w-4xl">
+              Lock capital into an autonomous GenLayer Intelligent Contract pool. Establish non-deterministic
+              loss criteria, deductible thresholds, and governing policy terms to back property claims.
+            </p>
+          </div>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-mono">
-          Underwrite Policy Escrow Pool
-        </h1>
-        <p className="mt-2 text-base text-[#9ea3b2] leading-relaxed max-w-3xl">
-          Lock capital into an autonomous GenLayer Intelligent Contract pool. Establish non-deterministic
-          loss criteria, deductible thresholds, and governing policy terms to back property claims.
-        </p>
-      </div>
+      </section>
 
-      {/* Form Grid */}
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column: Core Metadata & Perils */}
-          <div className="space-y-8">
-            {/* Core Metadata */}
-            <div className="linear-card p-6 sm:p-8 space-y-6">
-              <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
-                <span className="text-[#8a8f9c]">01.</span> Facility Identification
-              </h2>
+      {/* Main Form Area matching 1536px wide grid */}
+      <div className="mx-auto max-w-[1536px] w-full px-5 sm:px-8 lg:px-12">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column: Core Metadata & Perils */}
+            <div className="space-y-8">
+              {/* Core Metadata */}
+              <div className="rounded-3xl border border-[#22242c] bg-[#141519]/70 p-6 sm:p-8 space-y-6">
+                <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
+                  <span className="text-[#8a8f9c]">01.</span> Facility Identification
+                </h2>
 
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Policy Pool Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Atlantic Coastal Windstorm & Structural Surge Pool 2026"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 text-base text-white placeholder-[#686c7b] focus:border-[#424554] focus:outline-none transition-colors"
-                  />
-                </div>
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Policy Pool Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Atlantic Coastal Windstorm & Structural Surge Pool 2026"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-base text-white placeholder-[#686c7b] focus:border-[#424554] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Executive Coverage Summary *
-                  </label>
-                  <textarea
-                    required
-                    rows={4}
-                    placeholder="Provide a concise description of the property classes, geographic limits, and insured events..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 text-base text-white placeholder-[#686c7b] focus:border-[#424554] focus:outline-none transition-colors"
-                  />
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Executive Coverage Summary *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      placeholder="Brief overview explaining what structural assets this pool covers and under what conditions..."
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-sm text-white placeholder-[#686c7b] focus:border-[#424554] focus:outline-none transition-colors"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Covered Perils Checklist */}
-            <div className="linear-card p-6 sm:p-8 space-y-6">
-              <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
-                <span className="text-[#8a8f9c]">02.</span> Covered Perils &amp; Triggers
-              </h2>
+              {/* Covered Perils Preset Selector */}
+              <div className="rounded-3xl border border-[#22242c] bg-[#141519]/70 p-6 sm:p-8 space-y-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
+                    <span className="text-[#8a8f9c]">02.</span> Covered Perils
+                  </h2>
+                  <span className="text-xs font-mono text-[#8a8f9c]">
+                    {selectedPerils.length} Selected
+                  </span>
+                </div>
+                <p className="text-xs text-[#8a8f9c]">
+                  Select the catastrophic physical peril categories that GenLayer AI validators will check during adjudication.
+                </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {PRESET_PERILS.map((peril) => {
-                  const checked = selectedPerils.includes(peril);
-                  return (
-                    <button
-                      key={peril}
-                      type="button"
-                      onClick={() => togglePeril(peril)}
-                      className={`flex items-center gap-3 rounded-xl p-3.5 text-left border transition-all text-xs font-medium ${
-                        checked
-                          ? "border-[#484c59] bg-[#1c1e25] text-white"
-                          : "border-[#22242c] bg-[#141519] text-[#8a8f9c] hover:text-white"
-                      }`}
-                    >
-                      <span
-                        className={`h-4 w-4 rounded flex items-center justify-center border font-mono text-xs ${
-                          checked
-                            ? "border-white bg-white text-black font-bold"
-                            : "border-[#353843]"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {PRESET_PERILS.map((peril) => {
+                    const isSelected = selectedPerils.includes(peril);
+                    return (
+                      <button
+                        type="button"
+                        key={peril}
+                        onClick={() => togglePeril(peril)}
+                        className={`text-left p-3.5 rounded-xl border text-xs font-mono transition-all flex items-center justify-between ${
+                          isSelected
+                            ? "border-white bg-[#1a1c24] text-white font-semibold"
+                            : "border-[#22242c] bg-[#101115] text-[#8a8f9c] hover:border-[#343846] hover:text-white"
                         }`}
                       >
-                        {checked ? "✓" : ""}
-                      </span>
-                      <span>{peril}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Escrow Financials & Verbatim Terms */}
-          <div className="space-y-8">
-            {/* Financial Escrow Parameters */}
-            <div className="linear-card p-6 sm:p-8 space-y-6">
-              <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
-                <span className="text-[#8a8f9c]">03.</span> Escrow Capital &amp; Risk Caps
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Initial Escrow Deposit (GEN) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    required
-                    value={escrowAmount}
-                    onChange={(e) => setEscrowAmount(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 font-mono text-base text-white focus:border-[#424554] focus:outline-none"
-                  />
-                  <span className="text-xs text-[#8a8f9c] mt-1.5 block">
-                    Total liquid solvency deposited into contract escrow.
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Max Payout Cap per Claim (GEN) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.1"
-                    required
-                    value={maxClaimCap}
-                    onChange={(e) => setMaxClaimCap(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 font-mono text-base text-white focus:border-[#424554] focus:outline-none"
-                  />
-                  <span className="text-xs text-[#8a8f9c] mt-1.5 block">
-                    Upper limit payable on any single damage incident.
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Min Claimant Stake (GEN) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.1"
-                    required
-                    value={claimantStake}
-                    onChange={(e) => setClaimantStake(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 font-mono text-base text-white focus:border-[#424554] focus:outline-none"
-                  />
-                  <span className="text-xs text-[#8a8f9c] mt-1.5 block">
-                    Anti-spam bond. Slashed to pool if claim is fraudulent.
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
-                    Deductible (Basis Points) *
-                  </label>
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    max="5000"
-                    required
-                    value={deductibleBps}
-                    onChange={(e) => setDeductibleBps(e.target.value)}
-                    className="w-full rounded-xl border border-[#22242c] bg-[#141519] px-4 py-3 font-mono text-base text-white focus:border-[#424554] focus:outline-none"
-                  />
-                  <span className="text-xs text-[#8a8f9c] mt-1.5 block">
-                    {deductibleBps} bps = {(parseInt(deductibleBps || "0", 10) / 100).toFixed(2)}% policy deductible.
-                  </span>
+                        <span>{peril}</span>
+                        <span className="text-base">{isSelected ? "✓" : "+"}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            {/* Verbatim Legal Terms */}
-            <div className="linear-card p-6 sm:p-8 space-y-4">
-              <div className="flex items-center justify-between">
+            {/* Right Column: Capital Stakes & Policy Wording */}
+            <div className="space-y-8">
+              {/* Financial Capital Parameters */}
+              <div className="rounded-3xl border border-[#22242c] bg-[#141519]/70 p-6 sm:p-8 space-y-6">
                 <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
-                  <span className="text-[#8a8f9c]">04.</span> Verbatim Legal Terms &amp; Exclusions
+                  <span className="text-[#8a8f9c]">03.</span> Escrow Capital &amp; Caps
                 </h2>
-                <span className="text-xs font-mono text-[#8a8f9c]">GenLayer Jury Reference</span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Initial Pool Escrow (GEN) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      step="any"
+                      value={escrowAmount}
+                      onChange={(e) => setEscrowAmount(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-base text-white font-mono focus:border-[#424554] focus:outline-none"
+                    />
+                    <span className="text-[11px] text-[#8a8f9c] mt-1 block font-mono">
+                      Locked upon pool deployment
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Max Per-Claim Cap (GEN) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      step="any"
+                      value={maxClaimCap}
+                      onChange={(e) => setMaxClaimCap(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-base text-white font-mono focus:border-[#424554] focus:outline-none"
+                    />
+                    <span className="text-[11px] text-[#8a8f9c] mt-1 block font-mono">
+                      Maximum indemnity per filing
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Required Anti-Spam Stake (GEN)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="any"
+                      value={claimantStake}
+                      onChange={(e) => setClaimantStake(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-base text-white font-mono focus:border-[#424554] focus:outline-none"
+                    />
+                    <span className="text-[11px] text-[#8a8f9c] mt-1 block font-mono">
+                      Slashed if fraud is proven
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-[#8a8f9c] uppercase tracking-wider mb-2">
+                      Deductible Threshold (BPS)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="5000"
+                      value={deductibleBps}
+                      onChange={(e) => setDeductibleBps(e.target.value)}
+                      className="w-full rounded-xl border border-[#22242c] bg-[#101115] px-4 py-3 text-base text-white font-mono focus:border-[#424554] focus:outline-none"
+                    />
+                    <span className="text-[11px] text-[#8a8f9c] mt-1 block font-mono">
+                      500 bps = 5.00% deduction
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <p className="text-xs text-[#8a8f9c]">
-                This exact text will be stored on-chain. GenLayer validator LLMs will cross-examine submitted
-                photos and incident documents against these clauses during consensus adjudication.
-              </p>
+              {/* Legal Policy Terms */}
+              <div className="rounded-3xl border border-[#22242c] bg-[#141519]/70 p-6 sm:p-8 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-white font-mono flex items-center gap-2.5">
+                    <span className="text-[#8a8f9c]">04.</span> Verbatim Policy Terms
+                  </h2>
+                  <span className="text-xs font-mono text-[#8a8f9c]">
+                    Read by GenLayer AI Jury
+                  </span>
+                </div>
+                <p className="text-xs text-[#8a8f9c]">
+                  Validators parse this contract text to cross-examine evidence URLs and calculate Basis Points indemnity.
+                </p>
 
-              <textarea
-                rows={8}
-                required
-                value={termsText}
-                onChange={(e) => setTermsText(e.target.value)}
-                className="w-full rounded-xl border border-[#22242c] bg-[#090a0d] p-4 font-mono text-xs text-[#d8dbe4] leading-relaxed focus:border-[#424554] focus:outline-none"
-              />
+                <textarea
+                  required
+                  rows={8}
+                  value={termsText}
+                  onChange={(e) => setTermsText(e.target.value)}
+                  className="w-full rounded-xl border border-[#22242c] bg-[#101115] p-4 text-xs text-[#f0f2f5] font-mono leading-relaxed focus:border-[#424554] focus:outline-none"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Submit Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-[#22242c]">
-          <Link
-            href="/policies"
-            className="text-sm font-mono text-[#8a8f9c] hover:text-white transition-colors"
-          >
-            Cancel &amp; Return to Pools
-          </Link>
+          {/* Action Row */}
+          <div className="rounded-3xl border border-[#22242c] bg-[#141519]/70 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-xs font-mono text-[#8a8f9c] space-y-1">
+              <div>
+                Transaction Target: <span className="text-white">GenLayer Studionet (Chain 61999)</span>
+              </div>
+              <div>
+                Initial Liquidity: <span className="text-white font-bold">{escrowAmount} GEN</span>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={txState === "signing" || txState === "broadcasting" || txState === "waiting"}
-            className="btn-pill-primary font-mono w-full sm:w-auto"
-          >
-            <ShieldCheckIcon className="h-5 w-5" />
-            <span>Underwrite &amp; Lock Escrow ({escrowAmount} GEN)</span>
-          </button>
-        </div>
-      </form>
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <Link
+                href="/policies"
+                className="w-full sm:w-auto px-6 py-3 rounded-full border border-[#22242c] text-sm text-[#8a8f9c] hover:text-white text-center font-mono"
+              >
+                Cancel
+              </Link>
 
-      {/* Transaction Modal */}
-      <TransactionLifecycle
-        isOpen={txState !== "idle"}
-        state={txState}
-        txHash={txHash}
-        errorMessage={txError}
-        title="Underwriting Policy Escrow Facility"
-        actionLabel="Locking Capital on GenLayer Studionet"
-        onClose={() => {
-          setTxState("idle");
-          if (txState === "confirmed") {
-            router.push("/policies");
-          }
-        }}
-        onConfirmedAction={() => router.push("/policies")}
-      />
+              <button
+                type="submit"
+                disabled={txState === "signing" || txState === "broadcasting" || txState === "waiting"}
+                className="btn-pill-primary w-full sm:w-auto font-mono text-sm uppercase tracking-wider"
+              >
+                {txState === "signing"
+                  ? "Awaiting Wallet Signature..."
+                  : txState === "broadcasting" || txState === "waiting"
+                  ? "Confirming on Studionet..."
+                  : `Fund Escrow & Deploy Pool (${escrowAmount} GEN)`}
+              </button>
+            </div>
+          </div>
+
+          {/* Transaction Lifecycle Status Card */}
+          <TransactionLifecycle
+            state={txState}
+            txHash={txHash}
+            errorMessage={txError}
+            isOpen={txState !== "idle"}
+            onClose={() => {
+              setTxState("idle");
+              setTxHash(undefined);
+              setTxError(undefined);
+            }}
+            onReset={() => {
+              setTxState("idle");
+              setTxHash(undefined);
+              setTxError(undefined);
+              router.push("/policies");
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 }
